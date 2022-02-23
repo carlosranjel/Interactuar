@@ -1,0 +1,36 @@
+<aura:component controller="IT_Avales">
+    <aura:attribute name="Cliente"          type="Account" access="global"/>
+    <aura:attribute name="idOportunidad"    type="String"  access="global"/>
+    <aura:attribute name="resaltarCliente"  type="Boolean" access="global"/>
+
+    <aura:registerEvent name="EventoAvalClienteAsociado" type="c:EventoAvalClienteAsociado"/>
+
+<lightning:button>
+    <lightning:avatar variant="circle" size="x-small" src="{!$Resource.imagenesSF + '/images/avatar2.jpg'}" initials="JD" fallbackIconName="standard:person_account" alternativeText="Jane Doe" class="slds-m-right_small"/>    
+    <div class="slds-p-horizontal- -small">
+        <div class="infoCliente">
+            <div class="{!v.resaltarCliente?'seleccionado':'noSeleccionado'}" onclick="{!c.goToAccount}" onmouseover="{!c.resaltaCliente}" onmouseout="{!c.noResaltaCliente}" title="Ir al Cliente">
+                <span>{!v.Cliente.Name}</span>
+            </div>
+        </div>
+        <div>
+            <span>{!v.Cliente.Numero_de_identificacion__c}</span>
+        </div>
+    </div>
+    <lightning:layout horizontalAlign="center">
+        <div class="slds-m-around- -large">
+            <div class="slds-form-element">
+                <label class="slds-checkbox_toggle slds-grid">
+                <span class="slds-form-element__label slds-m-bottom_none">Convertir Cliente</span>
+                <ui:inputCheckbox name="chkbox" aura:id="chkbox" class="slds-input" 
+                change="{!c.convertirClienteAval}" />
+                <span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
+                <span class="slds-checkbox_faux"></span>
+                </span>
+                </label>
+            </div> 
+        </div>
+        <lightning:buttonIcon iconName="utility:delete" variant="destructive" alternativeText="Delete" class="slds-m-left_xx-small slds-button_text-destructive" title="Eliminar Aval" onclick="{! c.EliminarDataAval }"/>
+    </lightning:layout>       
+</lightning:button>
+</aura:component>

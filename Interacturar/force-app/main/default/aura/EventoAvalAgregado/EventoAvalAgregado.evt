@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Evento que le indica al comp aura principal 
+                                          que se ha agregado un aval a la oportunidad">
+    <aura:attribute name="contactoAgregado" type="Contact"/>
+</aura:event>

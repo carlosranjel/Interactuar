@@ -1,0 +1,33 @@
+<aura:component controller="IT_Avales">
+    <aura:attribute name="Estructura"    type="sObject" access="global"/>
+    <aura:attribute name="idContacto"    type="String"  access="global"/>
+    <aura:attribute name="idOportunidad" type="String"  access="global"/>
+    <aura:attribute name="selected"      type="Boolean" default="false"/>
+    <aura:attribute name="sincronizado"  type="Boolean" default="false"/>
+    <aura:attribute name="resaltarAval"  type="Boolean" default="false"/>
+    <aura:attribute name="noAplicaRepr"  type="Boolean" default="false"/>
+    <aura:attribute name="representante" type="String"  default="slds-m-left_xx-small "/>
+    
+    <aura:handler   name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:flow aura:id="flowData" />
+    <aura:registerEvent name="EventoAvalExpelido" type="c:EventoAvalExpelido"/>
+
+<lightning:button class="{! v.selected ? 'aval selected' : 'ninguno' }" onclick="{!c.clickEnAval}">    
+    <lightning:avatar variant="circle" size="x-small" src="{!$Resource.imagenesSF + '/images/avatar2.jpg'}" initials="JD" fallbackIconName="standard:person_account" alternativeText="Jane Doe" class="slds-m-right_small"/>    
+<div class="slds-p-horizontal- -small">
+    <div class="{!v.resaltarAval?'seleccionado':'noSeleccionado'}" onclick="{!c.goToAval}" onmouseover="{!c.resaltaAval}" onmouseout="{!c.noResaltaAval}" title="Ir al Aval">        
+        <span>{!v.Estructura.nomContacto}</span>
+    </div>
+    <div>
+        <span>{!v.Estructura.numIdentificacion}</span>
+    </div>
+</div>
+<lightning:layout horizontalAlign="center">
+    <lightning:layoutItem padding="horizontal-small">
+        <lightning:button variant="Neutral" label="Ejecutar" title="Ejecutar Aval" onclick="{! c.EjecutarDataCreditoAval }" disabled="{!v.selected}"/>
+        <lightning:buttonIcon iconName="utility:delete" variant="destructive" alternativeText="Delete" class="slds-m-left_xx-small slds-button_text-destructive" title="Eliminar Aval" onclick="{! c.EliminarDataAval }"  disabled="{!v.sincronizado}"/>
+        <lightning:buttonIcon iconName="utility:groups" class="{!v.representante}" title="Representante Legal" onclick="{! c.RepresentanteLegal }" disabled="{! v.sincronizado || v.noAplicaRepr}"/>    
+    </lightning:layoutItem>
+</lightning:layout>
+</lightning:button>
+</aura:component>

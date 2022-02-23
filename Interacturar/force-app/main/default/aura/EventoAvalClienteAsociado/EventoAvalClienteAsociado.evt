@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Evento que le indica al comp aura principal
+                        que un cliente se convirtio en aval y fue asociado a la opp">
+<aura:attribute name="contactoAvalAsociado" type="String"/>
+</aura:event>

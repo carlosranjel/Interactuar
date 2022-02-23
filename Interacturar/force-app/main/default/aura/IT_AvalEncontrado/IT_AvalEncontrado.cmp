@@ -1,0 +1,31 @@
+<aura:component controller="IT_Avales">
+
+    <aura:attribute name="Contacto"      type="Contact" access="global"/>
+    <aura:attribute name="idOpotunidad"  type="String" access="global"/>
+    <aura:registerEvent name="EventoAvalAgregado" type="c:EventoAvalAgregado" />
+
+    <lightning:button >
+        <div class="slds-p-horizontal- -small">
+            <div class="infoContacto">
+                <span class="label">Aval encontrado:</span>
+                <span>{!v.Contacto.Name}</span>
+            </div>
+            <div class="infoContacto">
+                <span class="label">Documento:</span>
+                <span>{!v.Contacto.Numero_de_identificacion__c}</span>
+            </div>
+        </div>
+        <div class="slds-m-around- -large">
+            <div class="slds-form-element">
+                <label class="slds-checkbox_toggle slds-grid">
+                <span class="slds-form-element__label slds-m-bottom_none">Agregar</span>
+                <ui:inputCheckbox name="chkbox" aura:id="chkbox" class="slds-input" 
+                change="{!c.agregarAvalaOportunidad}" />
+                <span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
+                <span class="slds-checkbox_faux"></span>
+                </span>
+                </label>
+            </div> 
+        </div>
+        </lightning:button>
+</aura:component>

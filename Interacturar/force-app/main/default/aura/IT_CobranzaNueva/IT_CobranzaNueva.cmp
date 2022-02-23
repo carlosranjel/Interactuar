@@ -1,0 +1,123 @@
+<aura:component Controller="IT_Cobranza_ctr">
+    <aura:attribute name="empleadoSeleccionado" type="Empleado__c"  description="Empleado seleccionado"/>
+    <aura:attribute name="listOfSearchRecords"  type="List" description="Use,for store the list of search records which returns from apex class"/>
+    <aura:attribute name="SearchKeyWord"        type="string"/>
+    <aura:attribute name="IconName"             type="string" default="standard:shipment"/>
+    <aura:attribute name="objectAPIName"        type="string" default="Empleado__c"/>
+    <aura:attribute name="Message"              type="String" default=""/>
+    <aura:attribute name="idActivo"     type="ID"/>
+    <aura:attribute name="mapPickList"  type="Map"/>
+    <aura:attribute name="estadoSeleccionado"    type="String" default="En progreso"/>
+    <aura:attribute name="prioridadSeleccionado" type="String" default="Normal"/>
+    <aura:attribute name="gestionSeleccionado"   type="String" default="-Ninguno-"/>
+    <aura:attribute name="contactoSeleccionado"  type="String" default="-Ninguno-"/>
+    <aura:attribute name="asuntoSeleccionado"    type="String" default="-Ninguno-"/>
+    <aura:attribute name="gestionCheckSeleccionado" type="Boolean" default="false"/>
+    <aura:attribute name="fechaVSeleccionado"      type="Date"/>
+    <aura:attribute name="fechaASeleccionado"      type="Date"/>
+    <aura:attribute name="pagoSeleccionado"        type="String"/>
+    <aura:attribute name="descripcionSeleccionado" type="String"/>
+
+    <aura:handler   name="init" action="{!c.doInit}" value="{!this}"/>
+    <!-- <aura:handler   name="init" action="{!c.AsesorCuenta}" value="{!this}"/> -->
+    <aura:handler name="oSelectedRecordEvent" event="c:EventoCobranzaListaEmpleados" action="{!c.handleComponentEvent}"/>
+                
+    <lightning:layout multipleRows="true">
+        <div onmouseleave="{!c.onblur}" aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close" data-select="single">
+            <label class="slds-form-element__label" for="lookup-348">Asesor Asignado</label>
+            <!--This part is for display search bar for lookup-->  
+            <div class="slds-form-element__control">                
+                <div class="slds-input-has-icon slds-input-has-icon--right">
+                    <!-- Seccion para cuando el empleado es seleccionado -->
+                    <div aura:id="lookup-pill" class="slds-pill-container slds-hide">
+                         <lightning:pill class="pillSize" label="{!v.empleadoSeleccionado.Name}" name="{!v.empleadoSeleccionado.Name}" onremove="{! c.clear }">
+                              <aura:set attribute="media">
+                                 <lightning:icon iconName="{!v.IconName}" size="x-small" alternativeText="{!v.IconName}"/>
+                              </aura:set>
+                          </lightning:pill>
+                    </div>
+                    <div aura:id="lookupField" class="slds-show">
+                        <lightning:icon class="slds-input__icon slds-show" iconName="utility:search" size="x-small" alternativeText="search"/>
+                        <span class="slds-icon_container  slds-combobox__input-entity-icon" title="record">
+                            <lightning:icon class="slds-icon slds-icon slds-icon_small slds-icon-text-default" iconName="{!v.IconName}" size="x-small" alternativeText="icon"/>
+                            <span class="slds-assistive-text"></span>
+                        </span>
+                        <ui:inputText click="{!c.onfocus}" updateOn="keyup" keyup="{!c.keyPressController}" class="slds-lookup__search-input slds-input leftPaddingClass" value="{!v.SearchKeyWord}" placeholder="     search..."/>
+                    </div>   
+                </div>
+            </div>
+            <!--This part is for Display typehead lookup result List-->  
+            <ul style="min-height:40px;margin-top:0px !important" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
+                <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
+                <center> {!v.Message}</center>
+                <aura:iteration items="{!v.listOfSearchRecords}" var="emp">
+                    <c:IT_CobranzaMuestraEmpleado empleado="{!emp}" IconName="{!v.IconName}"/>
+                </aura:iteration>
+            </ul>
+        </div>
+    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="slds-p-around_xx-small">
+        <lightning:select name="estado" aura:id="selected" value="{!v.estadoSeleccionado}" label="Estado" disabled="true">                
+        <option value="{!v.estadoSeleccionado}">{!v.estadoSeleccionado}</option>
+        <!-- <aura:iteration items="{!v.mapPickList.estado}" var="val">
+        <option text="{!val.label}" value="{!val.value}"/>
+        </aura:iteration> -->
+        </lightning:select>    
+    </lightning:layoutItem>
+    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="slds-p-around_xx-small">
+        <lightning:select name="prioridad" aura:id="selected" value="{!v.prioridadSeleccionado}" label="Prioridad" required="true">                
+        <option value="{!v.prioridadSeleccionado}">{!v.prioridadSeleccionado}</option>
+        <aura:iteration items="{!v.mapPickList.prioridad}" var="val">
+        <option text="{!val.label}" value="{!val.value}"/>
+        </aura:iteration>
+        </lightning:select>
+    </lightning:layoutItem>
+    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="slds-p-around_xx-small">
+        <lightning:select name="tipoGestion" aura:id="selected" value="{!v.gestionSeleccionado}" label="Tipo de Gestión" required="true">                
+        <option value="{!v.gestionSeleccionado}">{!v.gestionSeleccionado}</option>
+        <aura:iteration items="{!v.mapPickList.tGestion}" var="val">
+        <option text="{!val.label}" value="{!val.value}"/>
+        </aura:iteration>
+        </lightning:select>
+    </lightning:layoutItem>
+    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="slds-p-around_xx-small">
+        <lightning:select name="tipoContacto" aura:id="selected" value="{!v.contactoSeleccionado}" label="Tipo de Contacto" required="true">                
+        <option value="{!v.contactoSeleccionado}">{!v.contactoSeleccionado}</option>
+        <aura:iteration items="{!v.mapPickList.tContacto}" var="val">
+        <option text="{!val.label}" value="{!val.value}"/>
+        </aura:iteration>
+        </lightning:select>
+    </lightning:layoutItem>
+    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="slds-p-around_xx-small">
+        <lightning:select name="asunto" aura:id="selected" value="{!v.asuntoSeleccionado}" label="Asunto" required="true">                
+        <option value="{!v.asuntoSeleccionado}">{!v.asuntoSeleccionado}</option>
+        <aura:iteration items="{!v.mapPickList.asunto}" var="val">
+        <option text="{!val.label}" value="{!val.value}"/>
+        </aura:iteration>
+        </lightning:select>
+    </lightning:layoutItem>
+    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="slds-p-around_xx-small">
+        <lightning:input type="checkbox" label="¿Gestión efectiva?" name="gestionEfectiva" onchange="{!c.insertaDatoCheck}" aura:id="gEfectiva" />
+    </lightning:layoutItem>
+    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="slds-p-around_xx-small">
+        <lightning:input type="date" name="fechaVencimiento" label="Fecha de Vencimiento" value="{!v.fechaVSeleccionado}" required="true"/>
+    </lightning:layoutItem>
+    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="slds-p-around_xx-small">
+        <lightning:input type="date" name="fechaAcuerdoPago" label="Fecha acuerdo de pago" value="{!v.fechaASeleccionado}" required="true"/>
+    </lightning:layoutItem>
+    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="slds-p-around_xx-small">
+        <lightning:input type="number" name="pagoMinimo" label="Pago minimo" value="{!v.pagoSeleccionado}" required="true" />
+    </lightning:layoutItem>
+    <lightning:formattedText value="Comentarios" />
+    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="slds-p-around_xx-small">
+        <div class="slds-form-element">
+        <div class="slds-form-element__control">
+        <lightning:inputRichText aura:id="description" title="Comentarios" label="Comentarios" disabledCategories="FORMAT_FONT" value="{!v.descripcionSeleccionado}" />
+        </div>
+        </div>
+    </lightning:layoutItem>       
+    <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" padding="around-small">          
+        <lightning:button label="Enviar" title="Enviar" onclick="{! c.Guardar }" iconName="utility:save" iconPosition="left" class="slds-align_absolute-center"/>        
+    </lightning:layoutItem>
+    </lightning:layout>
+
+</aura:component>

@@ -1,0 +1,23 @@
+<aura:component >
+    <aura:attribute name="resaltaTarea"  type="Boolean" default="false"/>
+    <aura:attribute name="tarea"         type="Task"/>
+    <aura:attribute name="variante"      type="String" default="base"/>
+
+    <div onmouseover="{!c.resaltaBt}" onmouseout="{!c.noResaltaBt}">        
+    <lightning:button variant="{!v.variante}"  title="Tarea">  
+    <lightning:icon iconName="action:new_task" alternativeText="New Task" title="New Task" size="x-small"/>   
+    <div class="slds-p-horizontal--small">
+        <div class="slds-grid slds-gutters">
+            <div class="{!v.resaltaTarea?'seleccionado':'noSeleccionado'}" onclick="{!c.goToTarea}" onmouseover="{!c.resaltaTarea}" onmouseout="{!c.noResaltaTarea}" title="Ir a Tarea">        
+                <span>Estado</span> <br/>
+                <span>{!v.tarea.Status}</span>        
+            </div>
+            <div class="slds-col">
+                <span>Asunto</span> <br/>
+                <span>{!v.tarea.Subject}</span>
+            </div>
+        </div>
+    </div>
+    </lightning:button>
+    </div>
+</aura:component>

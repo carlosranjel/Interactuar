@@ -1,0 +1,128 @@
+<aura:component controller="IT_Avales" access="global" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction">
+
+    <aura:attribute name="escondeBotonNuevo"   type="Boolean" default="true"/>
+    <aura:attribute name="nuevoAval"           type="Boolean" />
+    <aura:attribute name="PreviamenteAgregado" type="Boolean" />
+    <aura:attribute name="ClienteNoEncontrado" type="Boolean" />
+    <aura:attribute name="OppSincronizada"     type="Boolean" default="false"/>
+    <aura:attribute name="avalesEncontrados"   type="Contact[]" />
+    <aura:attribute name="clienteEncontrado"   type="Account" />
+    <aura:attribute name="estaBuscando"        type="Boolean" default="false"/>
+    <aura:attribute name="estaBuscandoCliente" type="Boolean" default="false"/>
+    <aura:attribute name="lstEstructura"       type="sObject[]" /> 
+    <aura:attribute name="recordId"            type="String" />        
+    
+    <aura:handler   name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler   name="EventoAvalAgregado"         event="c:EventoAvalAgregado"        action="{!c.capturaEventoAvalAgregado}"/>
+    <aura:handler   name="EventoAvalCreado"           event="c:EventoAvalCreado"          action="{!c.capturaEventoAvalCreado}"/>
+    <aura:handler   name="EventoAvalExpelido"         event="c:EventoAvalExpelido"        action="{!c.capturaEventoAvalExpelido}"/>
+    <aura:handler   name="EventoAvalClienteAsociado"  event="c:EventoAvalClienteAsociado" action="{!c.EventoAvalClienteAsociado}"/>
+            
+    <lightning:card  title="Avales Asociados" iconName="action:add_contact">
+        <lightning:accordion aura:id="accordion" activeSectionName="A" allowMultipleSectionsOpen="true">
+            <lightning:accordionSection name="Seccion A" label="Agregar o quitar Avales">
+            <lightning:layout multipleRows="true">
+            <aura:if isTrue="{!not(empty(v.lstEstructura))}">
+                <aura:Iteration items="{!v.lstEstructura}" var="con">  
+                <lightning:layoutItem padding="small">                    
+                    <c:IT_AvalSeleccionado Estructura="{!con}" idContacto="{!con.idContacto}" idOportunidad="{!v.recordId}" sincronizado="{!v.OppSincronizada}"/>
+                </lightning:layoutItem>
+                </aura:Iteration>
+           </aura:if>
+        </lightning:layout>
+        </lightning:accordionSection>
+        <lightning:accordionSection name="Seccion B" label="Buscar Avales">
+        <aura:if isTrue="{!not(v.OppSincronizada)}">
+            <div onkeyup="{! c.buscaConEnter }" onclick="{! c.limpiarPill }" onkeydown="{! c.limpiarPill }">
+            <lightning:input
+                aura:id="enter-search"
+                name="enter-search"
+                label="Busqueda de Avales"
+                type="search"
+                placeholder="Introduzca valor numerico"
+                isLoading="{! v.estaBuscando }"
+            />            
+        </div>
+       </aura:if>
+       <aura:if isTrue="{!v.OppSincronizada}">
+            <lightning:pill label="Esta oportunidad ya se encuentra Sincronizada" >
+            <aura:set attribute="media">
+            <lightning:avatar src="{!$Resource.imagenesSF + '/images/avatar1.jpg'}" fallbackIconName="standard:user" variant="circle"  alternativeText="User avatar"/>
+            </aura:set>
+            </lightning:pill>
+        </aura:if>
+        <lightning:layout multipleRows="true">
+        <aura:if isTrue="{!v.avalesEncontrados.length > 0}">
+            <aura:Iteration items="{!v.avalesEncontrados}" var="opcionAval">
+                <c:IT_AvalEncontrado Contacto="{!opcionAval}" idOpotunidad="{!v.recordId}" />
+                <!--si se selecciona el aval se debe borrar de la lista de avalesEncontrados
+                 -->
+            </aura:Iteration>
+        </aura:if>
+        <aura:if isTrue="{!v.PreviamenteAgregado}">
+            <lightning:pill label="Este Aval ya esta asociado para esta oportunidad" >
+            <aura:set attribute="media">
+                <lightning:avatar src="{!$Resource.imagenesSF + '/images/avatar1.jpg'}" fallbackIconName="standard:user" variant="circle"  alternativeText="User avatar"/>
+            </aura:set>
+        </lightning:pill>
+        </aura:if>
+        </lightning:layout>   
+        </lightning:accordionSection>   
+        <lightning:accordionSection name="Seccion C" label="Crear Avales y asociarlos">
+        <lightning:layout >
+        <aura:if isTrue="{! and( v.escondeBotonNuevo , not(v.OppSincronizada) )}">
+            <lightning:button iconName="utility:salesforce1" variant="brand" label="Nuevo Aval"
+                               title="Nuevo Aval" onclick="{!c.nuevoAval}"/>
+        </aura:if>
+        <aura:if isTrue="{!v.OppSincronizada}">  
+            <lightning:pill label="Esta oportunidad ya se encuentra Sincronizada" >
+            <aura:set attribute="media">
+            <lightning:avatar src="{!$Resource.imagenesSF + '/images/avatar1.jpg'}" fallbackIconName="standard:user" variant="circle"  alternativeText="User avatar"/>
+            </aura:set>
+            </lightning:pill>
+        </aura:if>
+        <aura:if isTrue="{!v.nuevoAval}">  
+            <lightning:layoutItem padding="small">  
+                <c:IT_AvalNuevo  idOportunidad="{!v.recordId}"/>                 
+            </lightning:layoutItem>               
+        </aura:if>           
+        </lightning:layout>
+    </lightning:accordionSection>  
+    <lightning:accordionSection name="Seccion D" label="Conversion Cliente en Aval">
+    <aura:if isTrue="{! not(v.OppSincronizada) }">
+        <div onkeyup="{! c.buscaClienteConEnter }" onclick="{! c.limpiarPill }" onkeydown="{! c.limpiarPill }">
+        <lightning:input
+        aura:id="enter-search-client"
+        name="enter-search-client"
+        label="Busqueda de Clientes"
+        type="search"
+        placeholder="Introduzca valor numerico"
+        isLoading="{! v.estaBuscandoCliente }"
+       /> 
+       </div>
+    </aura:if>
+    <aura:if isTrue="{!v.OppSincronizada}">
+        <lightning:pill label="Esta oportunidad ya se encuentra Sincronizada" >
+        <aura:set attribute="media">
+        <lightning:avatar src="{!$Resource.imagenesSF + '/images/avatar1.jpg'}" fallbackIconName="standard:user" variant="circle"  alternativeText="User avatar"/>
+        </aura:set>
+        </lightning:pill>
+    </aura:if>
+       <br/>
+    <lightning:layout>
+    <aura:if isTrue="{!not(empty(v.clienteEncontrado))}">
+        <c:IT_AvalNuevo_Cliente Cliente="{!v.clienteEncontrado}" idOportunidad="{!v.recordId}"/> 
+    </aura:if>    
+    <aura:if isTrue="{!v.ClienteNoEncontrado}">
+        <lightning:pill label="Ingrese un número de identificación valido" >
+        <aura:set attribute="media">
+            <lightning:avatar src="{!$Resource.imagenesSF + '/images/avatar1.jpg'}" fallbackIconName="standard:user" variant="circle"  alternativeText="User avatar"/>
+        </aura:set>
+    </lightning:pill>
+    </aura:if>
+    </lightning:layout>
+    </lightning:accordionSection> 
+    </lightning:accordion>
+    </lightning:card>
+
+</aura:component>

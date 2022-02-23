@@ -1,0 +1,20 @@
+<aura:component Controller="IT_Cobranza_ctr">
+
+    <aura:attribute name="idActivo"   type="String"/>    
+    <aura:attribute name="lstTareas"  type="Object[]"/>
+
+    <aura:handler   name="init" action="{!c.doInit}" value="{!this}"/>
+
+    <aura:if isTrue="{!not(empty(v.lstTareas))}">
+        <lightning:accordion aura:id="accordion" activeSectionName="A" allowMultipleSectionsOpen="true">            
+            <aura:iteration items="{!v.lstTareas}" var="tarea">
+            <lightning:accordionSection name="Seccion A" label="{!format(tarea.Fecha_Creacion__c)}">
+            <c:IT_CobranzaCreada tarea="{!tarea}" />
+            </lightning:accordionSection>
+            </aura:iteration>            
+        </lightning:accordion>
+        <aura:set attribute="else">
+        <p><lightning:formattedText value="Activo sin Tareas" /></p>
+        </aura:set>
+</aura:if>
+</aura:component>

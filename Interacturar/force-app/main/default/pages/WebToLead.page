@@ -1,0 +1,59 @@
+<apex:page >
+<!--  ----------------------------------------------------------------------  -->
+<!--  NOTA: Agregue el siguiente elemento <META> a su página <HEAD>.  Si es   -->
+<!--  preciso, modifique el parámetro charset para especificar el conjunto    -->
+<!--  de caracteres de su página HTML.                                        -->
+<!--  ----------------------------------------------------------------------  -->
+
+<META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+
+<!--  ----------------------------------------------------------------------  -->
+<!--  NOTA: Agregue el siguiente elemento <FORM> a su página.                 -->
+<!--  ----------------------------------------------------------------------  -->
+
+<form action="https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8" method="POST">
+
+<input type="hidden" name="oid" value="00Di0000000dCZO"/>
+<input type="hidden" name="retURL" value="http://interactuar.org.co/gracias"/>
+
+<!--  ----------------------------------------------------------------------  -->
+<!--  NOTA: Estos campos son elementos de depuración opcionales. Elimine      -->
+<!--  los comentarios de estas líneas si desea realizar una prueba en el      -->
+<!--  modo de depuración.                                                     -->
+<!--  <input type="hidden" name="debug" value=1>                              -->
+<!--  <input type="hidden" name="debugEmail"                                  -->
+<!--  value="mauricio.gomez@vasslatam.com">                                   -->
+<!--  ----------------------------------------------------------------------  -->
+
+<label for="first_name">Nombre</label><input  id="first_name" maxlength="40" name="first_name" size="20" type="text" /><br/>
+
+<label for="last_name">Apellidos</label><input  id="last_name" maxlength="80" name="last_name" size="20" type="text" /><br/>
+
+<label for="email">Correo electrónico</label><input  id="email" maxlength="80" name="email" size="20" type="text" /><br/>
+
+Móvil -:<input  id="00N1Y00000IMS1B" maxlength="40" name="00N1Y00000IMS1B" size="20" type="text" /><br/>
+
+Información adicional - complemento:<input  id="00N1Y00000IMS0w" maxlength="255" name="00N1Y00000IMS0w" size="20" type="text" /><br/>
+
+Descripción del interés:<textarea  id="00N1Y00000IzFQW" name="00N1Y00000IzFQW" rows="2" type="text" wrap="soft"></textarea><br/>
+
+<label for="lead_source">Origen del candidato</label>
+<select  id="lead_source" name="lead_source">
+<option value="">--Ninguno--</option>
+<option value="Línea Telefonica">Línea Telefonica</option>
+<option value="Gestores de prospectos">Gestores de prospectos</option>
+<option value="Oficina Movil">Oficina Movil</option>
+<option value="Pagina WEB">Pagina WEB</option>
+<option value="Redes sociales">Redes sociales</option>
+<option value="Eventos">Eventos</option>
+<option value="Oficinas">Oficinas</option>
+<option value="Campaña Piloto Yarumal">Campaña Piloto Yarumal</option>
+<option value="MIG-ORA">MIG-ORA</option>
+</select><br/>
+
+<input type="submit" name="submit"/>
+
+</form>
+
+
+</apex:page>

@@ -1,0 +1,117 @@
+<aura:component
+  controller="IT_SincronizarCotizacion_ctr"
+  implements="force:lightningQuickActionWithoutHeader,flexipage:availableForRecordHome,force:hasRecordId,flexipage:availableForAllPageTypes"
+  access="global"
+>
+  <!--create a component attribut -->
+  <aura:attribute name="Spinner"            type="Boolean" default="FALSE" />  
+  <aura:attribute name="faltanCampos"       type="Boolean" />
+  <aura:attribute name="actualizaMovil"     type="Boolean" />
+  <aura:attribute name="recordId"           type="String" />
+  <aura:attribute name="lstCamposFaltantes" type="String" />
+  <aura:attribute name="lstMovilActualizar" type="String" />
+  <aura:attribute name="vigente"			type="Boolean" default="FALSE" />
+  <aura:handler	  name="init" value="{!this}" action="{!c.validarVigencia}"/>
+
+  <!--loading spinner start... style=Brand Medium (blue dots)-->
+  <aura:if isTrue="{!v.Spinner}">
+    <div aura:id="spinnerId" class="slds-spinner_container">
+      <div
+        class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative"
+        role="alert"
+      >
+        <span class="slds-assistive-text">Loading</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+  </aura:if>
+  <!-- Loading spinner end-->
+    
+	<aura:if isTrue="{!v.vigente}">
+          <!-- boton -->
+      <lightning:button 
+        variant="brand"
+        label="Sincronizar Cotizacion"
+        title="Sincronizar Cotizacion"
+        onclick="{!c.validaCredito}"/>
+        
+      <aura:set attribute="else">
+          <div aura:id="container">
+              <lightning:icon iconName="utility:warning"/>
+              <div class="slds-text-color_error">Por favor valide que el cliente y/o la Famiempresa se encuentren vigentes para poder realizar la sincronización</div>
+          </div>
+      </aura:set>
+    </aura:if>
+
+  <lightning:layout>
+    <aura:if isTrue="{!v.faltanCampos}">            
+        <!--###### MODAL BOX Start######--> 
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- ###### MODAL BOX HEADER Start ######-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Revisar Campos Faltantes</h2>
+                </header>
+                <!--###### MODAL BOX BODY Part Start######-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <p>
+                      <ui:outputText value="{!v.lstCamposFaltantes}"/>
+                    </p>
+                </div>
+                <!--###### MODAL BOX FOOTER Part Start ######-->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral" 
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{! c.closeModel }"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <!--###### MODAL BOX Part END Here ######-->            
+    </aura:if>
+</lightning:layout>
+<lightning:layout>
+  <aura:if isTrue="{!v.actualizaMovil}">            
+      <!--###### MODAL BOX Start######--> 
+      <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+          <div class="slds-modal__container">
+              <!-- ###### MODAL BOX HEADER Start ######-->
+              <header class="slds-modal__header">
+                  <lightning:buttonIcon iconName="utility:close"
+                                        onclick="{! c.closeModel }"
+                                        alternativeText="close"
+                                        variant="bare-inverse"
+                                        class="slds-modal__close"/>
+                  <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Recuerde actualizar el número movil requerido para el proceso de firmas</h2>
+              </header>
+              <!--###### MODAL BOX BODY Part Start######-->
+              <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                  <p style="text-align:center">
+                    <ui:outputText value="{!v.lstMovilActualizar}" />
+                  </p>
+              </div>
+              <!--###### MODAL BOX FOOTER Part Start ######-->
+              <footer class="slds-modal__footer">
+                <lightning:button variant="brand" 
+                                  label="Sincronizar Cotización"
+                                  title="Sincronizar Cotización"
+                                  onclick="{! c.ejecutarSincronizacion }"/>
+                <lightning:button variant="neutral" 
+                                  label="Cancel"
+                                  title="Cancel"
+                                  onclick="{! c.closeModel }"/>
+              </footer>
+          </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+      <!--###### MODAL BOX Part END Here ######-->            
+  </aura:if>
+</lightning:layout>
+</aura:component>

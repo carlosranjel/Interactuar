@@ -1,0 +1,94 @@
+<aura:component controller="IT_ServicioConsultaPQR_WS" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:html tag="style"> .slds-modal__container{max-width: 80% !important;width:80% !important;}</aura:html>
+    <aura:attribute name="spinner" 			type="Boolean" 	default="false" />
+    <aura:attribute name="isOpen" 			type="Boolean" 	default="false"/>
+    <aura:attribute name="isComment" 		type="Boolean" 	default="false"/>
+    <aura:attribute name="notComment" 		type="Boolean" 	default="false"/>
+    <aura:attribute name="inComment" 		type="String"/>
+    <aura:attribute name="lstObjects" 		type="Object[]"/>
+    
+    
+    <!--Inicio cargue spinner...-->
+    <aura:if isTrue="{!v.spinner}">
+        
+        <div aura:id="spinnerId" class="slds-spinner_container" size="small">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Cargando...</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+        
+    </aura:if>
+    <!--Final cargue spinner...-->
+    
+    <aura:if isTrue="{!v.isOpen}">
+        
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large" >
+            <div class="slds-modal__container">  
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close" onclick="{! c.closeModel }" alternativeText="close" variant="bare-inverse" class="slds-modal__close"/>
+                    <h3 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"><strong>Resultado Consulta PQRS</strong></h3>
+                </header>  
+                
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    
+                    <!--Inicio Comentario-->
+                    <aura:if isTrue="{!v.isComment}">
+                        <div  class="slds-text-body_small" style="text-align:center">{!v.inComment}</div>
+                    </aura:if>
+                    <!--Final Comentario.-->
+                    
+                    <!--Inicio Tabla-->
+                    <aura:if isTrue="{!v.notComment}">
+                        <table class="slds-table slds-table_bordered slds-table_col-bordered" style="width:100%">
+                            <aura:iteration items="{!v.lstObjects}" var="obj">
+                                
+                                <tr class="slds-hint-parent">
+                                    <th class="slds-table_bordered slds-text-color_success" style="width:1.25rem" scope="col">
+                                        <div class="slds-text-body_small" style="text-align:right" title="Fecha Ingreso"><strong>Fecha Ingreso</strong></div>
+                                    </th>  
+                                    <td class="slds-table_bordered slds-text-color_success" style="width:3.25rem" data-label="Fecha Ingreso">
+                                        <div class="slds-text-body_small" style="text-align:left" title="Fecha Ingreso"><strong>{!obj.fecha}</strong></div>
+                                    </td>
+                                </tr> 
+                                
+                                <tr class="slds-hint-parent">
+                                    <th class="" style="width:1.25rem" scope="col">
+                                        <div class="slds-text-body_small" style="text-align:right" title="Tipo">Tipo</div>
+                                    </th>
+                                    <td class="" style="width:3.25rem" data-label="Tipo">
+                                        <div class="slds-text-body_small" style="text-align:left" title="Tipo"><strong>{!obj.tipo}</strong></div>
+                                    </td>
+                                </tr> 
+                                
+                                <tr class="slds-hint-parent">
+                                    <th class="" style="width:1.25rem" scope="col">
+                                        <div class="slds-text-body_small" style="text-align:right" title="Descripcion">Descripción</div>
+                                    </th>                                        
+                                    <td class="" style="width:3.25rem" data-label="Descripcion">
+                                        <textarea class="slds-textarea slds-text-body_small" readonly="true">{!obj.descripcion}</textarea>
+                                        <!--<div class="slds-text-body_small" style="text-align:left" title="Descripcion">{!obj.descripcion}</div>-->
+                                    </td>
+                                </tr> 
+                                
+                                <tr class="slds-hint-parent">
+                                    <th class="" style="width:1.25rem" scope="col">
+                                        <div class="slds-text-body_small" style="text-align:right" title="Estado">Estado</div>
+                                    </th>
+                                    <td class="" style="width:3.25rem" data-label="Estado">
+                                        <div class="slds-text-body_small" style="text-align:left" title="Estado">{!obj.estado}</div>
+                                    </td>
+                                </tr> 
+                                
+                            </aura:iteration>
+                        </table>
+                    </aura:if>
+                    <!--Final Tabla-->
+                </div>
+            </div>
+        </section>   
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <lightning:button variant="brand" label="Consulta PQRS" title="Consulta PQRS" onclick="{!c.consultaPQR}"/>
+</aura:component>

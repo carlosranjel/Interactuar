@@ -1,0 +1,308 @@
+<aura:component controller="IT_Producto_Cotizacion_ctr" implements="force:lightningQuickActionWithoutHeader,flexipage:availableForRecordHome,force:hasRecordId" access="global">
+    <aura:attribute name="showform" type="Boolean" default="true" />
+    <aura:attribute name="showformModificarPrd" type="Boolean" default="false" />								  
+    <aura:attribute name="showSpinner" type="Boolean" default="false" />
+    <aura:attribute name = "unitPriceBoolean" type = "Boolean" default = "true"/>
+    <aura:attribute name="showSpinnersearch" type="Boolean" default="false" />
+    <aura:attribute name="displayMe" type="Boolean" default="true" />
+    <aura:attribute name="tipoRegistro" type="String"  />  
+    <aura:attribute name="tipoPersona" type="String"  />  
+    <aura:attribute name="Otrosprods" type="Object" />
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="cantidadProductos" type = "Integer" default  ="0"/>
+    <aura:attribute name="columnsSelected" type="Object[]"/>
+    <aura:attribute name="periodoGracia" type="Integer" default = "0"/>
+    <aura:attribute name="plazo" type="Integer"/>
+    <aura:attribute name="UnitPrice" type="Integer"/>
+    <aura:attribute name="Quantity" type="Integer"/>	    
+    <aura:attribute name="scoreConsultado" type="boolean" default="false"/>
+    <aura:attribute name="btnFormBack" type="boolean" default="false"/>
+    <aura:attribute name="btnFormNext" type="boolean" default="true"/>
+    <aura:attribute name="btnFormSave" type="boolean" default="false"/>
+    <aura:attribute name="btnFormCancel" type="boolean" default="true"/>    
+    <aura:attribute name="productosArray" type="Object[]"/>
+    <aura:attribute name="refresh" type="Boolean" default="true" />
+    <aura:attribute name="selectedRowsCount" type="Integer" default="0"/>
+    <aura:attribute name="editarCampos" type="boolean" default="false"/>
+    <aura:attribute name="erroresSF" type="boolean" default="false"/>
+    <aura:attribute name="contacto" type="Object" />
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="fondo" type="String" />
+    <aura:attribute name="consultaScore" type="Boolean" default = "true"/> 
+    <aura:attribute name="validaScore" type="Boolean" default = "false"/>  
+    <aura:attribute name="Score" type="integer" default="0"/>
+    <aura:attribute name="ScoreDescripcion" type ="String" default = ""/>
+    <aura:attribute name ="ErrorScore" type="String"/>
+    <aura:attribute name ="ErrorSF" type="String"/>
+    <aura:attribute name ="mensajeScore" type = "String"/>
+    <aura:attribute name ="mensajeScore2" type = "String"/>
+    <!--mejora consulta fondo -->
+    <aura:attribute name = "consultaFondo" type = "boolean" default = "false" />
+    <aura:attribute name = "ventanaConsultaFondo" type = "boolean" default = "false" />
+    <aura:attribute name = "mensajeErrorConsultaFondo" type = "String" />
+    
+    <!--fin mejora consulta fondo -->    
+    <force:recordData aura:id="proformarecord" recordId="{!v.recordId}" targetFields="{!v.contacto}" layoutType="FULL" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <!--aura:handler event="force:refreshView" action="{!c.doInit}"/-->
+    <aura:if isTrue="{!v.showSpinner}">
+        <lightning:spinner />
+    </aura:if>
+    <aura:html tag="style">
+        .slds-modal__container{ height : auto; max-height: 90rem; width: auto; max-width: 80rem; } .cuf-content { padding: 0 0rem !important; } .slds-p-around--medium { padding: 0rem !important; } .slds-modal__content{ overflow-y:hidden !important; height:120% !important; max-height:unset !important; }
+    </aura:html>
+    <aura:if isTrue="{!v.showform}">
+        <div class="modal-header slds-modal__header slds-size_1-of-1">
+            <h4 class="title slds-text-heading--medium" style="font-weight: bold;">Agregar productos</h4>
+            <h1>Lista de precios: Standard Price Book</h1>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!v.showformModificarPrd}">
+        <div class="modal-header slds-modal__header slds-size_1-of-1">
+            <h4 class="title slds-text-heading--medium" style="font-weight: bold;">Modificar productos de cotización seleccionadas</h4>
+        </div>
+    </aura:if>
+    <article class="slds-card">
+        <aura:if isTrue="{!v.showform}">
+            <div class="slds-grid slds-wrap slds-max-medium-table_stacked" >
+                <div class = "slds-size_1-of-1">
+                    <div class = "slds-form-element__control">
+                        <lightning:input type="search" minlength="3" onchange="{!c.searchproducts}" placeholder="Buscar Productos..." 
+                                         isLoading="{!v.showSpinnersearch}" aura:id="searchinp" style="width:auto;"/>
+                    </div>
+                </div>
+                <div style="height: 462px"   class="slds-col slds-size--1-of-1 slds-small-size--1-of-2 slds-medium-size--4-of-4 ">
+                    <h1 style="padding-left: 22px; color:#3758A8">( {! v.selectedRowsCount } ) seleccionados</h1> 
+                     
+                    <lightning:datatable  
+                                         keyField="id"
+                                         data="{!v.Otrosprods}"
+                                         columns="{!v.columns}"
+                                         onrowselection="{! c.updateSelectedText }"/>
+                                         
+                </div>      
+            </div>
+        </aura:if>
+        <aura:if isTrue="{!v.showformModificarPrd}">
+	   <lightning:recordEditForm  aura:id="formformulario" objectApiName="QuoteLineItem">
+            <table class="slds-table slds-table--bordered slds-max-medium-table_stacked" aura:id="tablaProducto" attribute="tablap">                       
+                <thead>
+                    <tr class="slds-text-title_caps">
+                        <th scope="col">
+                            <div title="Num"></div>
+                        </th>
+                        <th scope="col">
+                            <div title="NombreProducto">Nombre del Producto</div>
+                        </th>
+                        <th scope="col">
+                            <div title="Cantidad">Cantidad</div>
+                        </th>
+                        <th scope="col">
+                            <div title="PrecioVenta">Precio de Venta</div>
+                        </th>
+                        <th scope="col">
+                            <div title="Plazo">Plazo (Meses)</div>
+                        </th>
+                        <th scope="col">
+                            <div title="Fondo">Fondo</div>
+                        </th>
+                        <th scope="col">
+                            <div title="Periodo">Periodo de Gracia (Meses)</div>
+                        </th>
+						<th scope="col">
+                        </th>
+                    </tr>
+                </thead>                       
+                <tbody>                           
+                    <aura:iteration items="{!v.columnsSelected}" var="p" indexVar="index">   
+                        <tr class="slds-text-title_caps" id="{!index}">
+                            <td data-label="">
+                                
+                                <ui:outputText value="{!p.num}" aura:id="numColum" />
+                            </td>
+                            <td data-label="NOMBRE DEL PRODUCTO">
+                                 
+                                <ui:outputText value="{!p.nombre}" class="{!p.Id}" aura:id="idProductoSalesforce"/>
+                            </td>
+                            <td data-label="CANTIDAD">
+                                
+								
+                               <lightning:input type="number"
+                                      required = "true"
+                                      aura:id="Quantity"
+                                      variant="label-hidden"
+                                     onchange="{! c.Quantity }" />                                
+                            </td>
+                           <td data-label="PRECIO DE VENTA">
+                              
+                               <lightning:input type="number"
+                                      required = "true"
+                                      variant="label-hidden"
+                                      aura:id="UnitPrice"
+                                     onchange="{! c.UnitPrice }" />
+                            </td>                            
+
+ 
+                            <td data-label="PLAZO (MESES)"> 
+                                
+                               <lightning:input type="number"
+                                      required = "true"
+									variant="label-hidden"                                                
+                                      aura:id="Plazo_meses__c"
+                                     onchange="{! c.plazo }" />                                
+                                
+                            </td>
+                            <td data-label="FONDO">
+                                 
+                             <lightning:inputField fieldName="Fondo__c" onchange="{!c.OnChangeFondo}"  variant="label-hidden" aura:id="Fondo__c"  required="true"  />
+                            </td>
+                             <td data-label="PERIODO DE GRACIA (MESES)">
+                               <lightning:input type="number"
+                                       
+                                      variant="label-hidden"
+                                      aura:id="Periodo_Gracias_Meses__c"
+                                     onchange="{! c.OnChangePeriodoGracias }" />                                  
+                                
+                            </td>
+
+                           <td class="slds-hidden">
+                             <ui:outputText value="{!p.codeProduct}"  aura:id="productCode" class="slds-hidden" />                                
+                            </td>
+                         </tr>
+                    </aura:iteration>
+                </tbody>                        
+            </table> 
+        </lightning:recordEditForm>
+                
+        </aura:if>
+         <lightning:layout>
+	    	<aura:if isTrue="{!v.editarCampos}">
+                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- ###### MODAL BOX HEADER Start ######-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Resultados Score</h2>
+                </header>
+                <!--###### MODAL BOX BODY Part Start######-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <p>
+                      <ui:outputText value="{!v.mensajeScore}"/><br />
+                        
+                      <ui:outputText value="{!v.mensajeScore2}"/>
+                    </p>
+                </div>
+                <!--###### MODAL BOX FOOTER Part Start ######-->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral" 
+                                      label="Si"
+                                      title="Si"
+                                      onclick="{! c.closeModel }"/>
+                    <lightning:button variant="neutral" 
+                                      label="No"
+                                      title="No"
+                                      onclick="{! c.guardarProducto }"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+
+ 		    </aura:if>
+		</lightning:layout>
+
+        
+    <lightning:layout>
+        <aura:if isTrue="{!v.erroresSF}">
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_large" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+
+        <div class="slds-modal__container">
+            <!-- ###### MODAL BOX HEADER Start ######-->
+            <header class="slds-modal__header">
+                <lightning:buttonIcon iconName="utility:close"
+                                      onclick="{! c.closeErrors }"
+                                      alternativeText="close"
+                                      variant="bare-inverse"
+                                      class="slds-modal__close"/>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Errores al guardar el Producto.</h2>
+            </header>
+            <!--###### MODAL BOX BODY Part Start######-->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <p>
+                  {!v.ErrorSF}
+
+                </p>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral"  onclick="{! c.closeErrors }">Cancel</button>
+ 
+              </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+         </aura:if>
+    </lightning:layout>
+        
+                <!-- SE AGREGA POR VALIDACION DE FONDO -->
+         <lightning:layout>
+	    	<aura:if isTrue="{!v.ventanaConsultaFondo}">
+                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- ###### MODAL BOX HEADER Start ######-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModelFondo }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Resultados Validación Fondo</h2>
+                </header>
+                <!--###### MODAL BOX BODY Part Start######-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <p>
+                      <ui:outputText value="{!v.mensajeErrorConsultaFondo}"/><br />
+                        
+                    </p>
+                </div>
+                <!--###### MODAL BOX FOOTER Part Start ######-->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral" 
+                                      label="Elegir nuevo Fondo"
+                                      title="Si"
+                                      onclick="{! c.closeModelFondo }"/>
+
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+
+ 		    </aura:if>
+		</lightning:layout>        
+        <!-- FIND POR VALIDACION DE FONDO -->    
+        <div class="modal-footer slds-modal__footer slds-size_1-of-1">
+            
+            <div class="forceChangeRecordTypeFooter">
+              
+                <aura:if isTrue="{!v.btnFormBack}">
+                        <lightning:button  disabled="{!v.disabled}" variant="brand" type="submit" name="save" label="Atras" onclick="{!c.atras}"/>
+                </aura:if>
+                <aura:if isTrue="{!v.btnFormCancel}">
+                    <lightning:button  disabled="{!v.disabled}" variant="brand" type="submit" name="save" label="Cancel" onclick="{!c.closeQuickAction}"/>
+                </aura:if>
+                 <aura:if isTrue="{!v.btnFormNext}">
+                    <lightning:button disabled="{!v.disabled}" variant="brand" type="submit" name="save" label="Siguiente" onclick="{!c.siguiente}" />
+                </aura:if>
+                <aura:if isTrue="{!v.btnFormSave}">
+                    
+                    <lightning:button   variant="brand" type="submit" name="save" label="Guardar" onclick="{!c.verificaFondo}" />
+                </aura:if>
+                  
+            </div>
+            
+            
+        </div> 
+    </article>
+</aura:component>

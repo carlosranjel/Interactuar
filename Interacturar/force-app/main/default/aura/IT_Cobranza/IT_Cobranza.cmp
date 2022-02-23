@@ -1,0 +1,15 @@
+<aura:component Controller="IT_Cobranza_ctr"
+implements="force:appHostable,flexipage:availableForAllPageTypes,lightning:availableForFlowScreens,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" 
+access="global">
+
+    <aura:attribute name="selTabId"    type="String" />
+
+    <lightning:tabset variant="scoped" selectedTabId="{!v.selTabId}" aura:id="details">        
+        <lightning:tab label="GESTION DE COBRANZA" id="gCobranza">
+            <c:IT_CobranzaNueva idActivo="{!v.recordId}" />
+        </lightning:tab>
+        <lightning:tab label="LISTADO COBRANZAS" id="lstCobranza">
+            <c:IT_CobranzaLista idActivo="{!v.recordId}" />
+        </lightning:tab>
+    </lightning:tabset>
+</aura:component>

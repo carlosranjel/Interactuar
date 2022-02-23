@@ -1,0 +1,17 @@
+<aura:component  controller="IT_Beneficiario" 
+                implements="force:appHostable,flexipage:availableForAllPageTypes,lightning:availableForFlowScreens,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" 
+                access="global">
+    
+    <aura:attribute name="recordId"        type="String" />
+    <aura:attribute name="listaContactos"  type="List"/>
+    <aura:handler   name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler event="force:showToast" action="{!c.updateInfo}" />
+    
+    <lightning:card  title="Contactos Beneficiarios Prever" iconName="action:add_contact">    
+        <lightning:layout multipleRows="true">    
+            <aura:iteration items="{!v.listaContactos}" var="registroContacto">           
+                <c:IT_BeneficiarioEditar contacto="{!registroContacto}" />           
+            </aura:iteration>
+        </lightning:layout>
+    </lightning:card>
+</aura:component>

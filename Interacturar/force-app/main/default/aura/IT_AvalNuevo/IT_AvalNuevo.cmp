@@ -1,0 +1,34 @@
+<aura:component controller="IT_Avales">
+    
+    <aura:attribute name="idOportunidad"        type="String"/>
+    <aura:attribute name="nuevoContacto"        type="Contact"/>
+    <aura:attribute name="FirstName"            type="String"/>
+    <aura:attribute name="LastName"             type="String"/>
+    <aura:attribute name="NumeroIdentificacion" type="String"/>
+    <aura:attribute name="TipoIdentificacion"   type="String"/>
+    <aura:attribute name="Tipos_de_Identificacion"   type="List" default="['Cedula de Ciudadania',
+    'Cedula de Extranjeria','Tarjeta de Identidad','Pasaporte','Nit']"/>
+
+
+    <aura:registerEvent name="EventoAvalCreado" type="c:EventoAvalCreado" />
+                      
+    <!-- Display the new contact form -->
+    <div class="Crea contacto aval">
+        <lightning:card iconName="action:new_contact" title="Crea contacto aval">
+            <div class="slds-p-horizontal--small">
+                <lightning:input required="true" label="Primer nombre" value="{!v.FirstName}"/>
+                <lightning:input required="true" label="Primer apellido" value="{!v.LastName}"/>
+                <lightning:input required="true" label="Número identificación" value="{!v.NumeroIdentificacion}"/>
+                
+                <lightning:select name="idTipoDoc" label="Seleciona:" aura:id="tDocId" value="{!v.TipoIdentificacion}">
+                    <aura:iteration items="{!v.Tipos_de_Identificacion}" var="tipo">
+                        <option text="{!tipo}" value="{!tipo}" selected="{!tipo.selected}"/>
+                    </aura:iteration>
+                </lightning:select>
+                <br/>
+                <lightning:button iconName="utility:save" label="Guardar contacto aval" variant="brand" onclick="{!c.guardarContacto}"/>
+            </div>
+        </lightning:card>
+    </div>
+
+</aura:component>

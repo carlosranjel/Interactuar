@@ -1,0 +1,29 @@
+<aura:component controller="IT_Beneficiario"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,lightning:availableForFlowScreens,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" 
+                access="global">
+    <aura:attribute name="contacto"  type="Contact" />
+    
+    <aura:attribute name="cargando" type="Boolean" default="true"/>
+    
+    <lightning:accordion aura:id="accordion" activeSectionName="A" allowMultipleSectionsOpen="true">
+        <lightning:accordionSection name="Seccion A" label="{!v.contacto.Nombres_Beneficiario__c}">
+            <lightning:recordEditForm 
+                                      recordId="{!v.contacto.Id}" 
+                                      objectApiName="Contact"
+                                      onerror="{! c.onError}"
+                                      onsubmit="{! c.onSubmit}"
+                                      onsuccess="{! c.onSuccess}"
+                                      onload="{! c.onLoad}">
+                <lightning:messages />
+                <lightning:inputField fieldName="Nombres_Beneficiario__c" />
+                <lightning:inputField fieldName="Apellidos_Beneficiario__c" />
+                <lightning:inputField fieldName="Genero__c" />
+                <div style="text-align: center;margin-top: 20px;">
+                    <lightning:button  variant="destructive-text" label="Eliminar" title="Eliminar" onclick="{! c.deleteBeneficiario }" disabled="{!v.cargando}"/>
+                    <lightning:button variant="brand" type="submit" name="Guardar" label="Guardar" disabled="{!v.cargando}"/>
+                </div>
+            </lightning:recordEditForm>
+        </lightning:accordionSection>
+    </lightning:accordion>
+    
+</aura:component>

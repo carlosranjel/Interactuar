@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="Este evento pasa el empleado seleccionado al padre componente para que sea guardado">
+    <aura:attribute name="recordByEvent" type="Empleado__c"/>
+</aura:event>

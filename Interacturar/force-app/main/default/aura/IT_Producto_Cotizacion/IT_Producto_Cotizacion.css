@@ -1,0 +1,13 @@
+.THIS .popover {
+    position: relative;
+     
+    bottom: 70%;
+    fill : red;
+}
+.THIS .slds-popover--tooltip {
+    background: #FF0000; /* background color */
+    color: #444444; /* text color */
+}
+.THIS.textClass{
+    color: red;
+}

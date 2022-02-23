@@ -1,0 +1,1693 @@
+<apex:page Controller="IT_ResumenSolicitud_ctr" renderAs="PDF" applyBodyTag="false" showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="false">
+    <head>
+        <style>
+            body { font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif; 
+                   font-size: 14px; 
+                   margin: 0mm;
+                   padding:0;
+            } 
+            @page {
+                size: 12.3in 8.50in;
+                margin-top: 0mm;
+                margin-bottom: 0em;
+                margin-right: 0em;
+                margin-left: 0em;
+            }
+            .numero-contrato{
+                color: #D7D7D7;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                font-size: 15px;
+                margin-right: 3em;
+                margin-left: 3em;
+            }
+            .page-break {
+                display:block;
+                page-break-after:always;
+                margin-right: 5em;
+                margin-left: 5em;
+            }
+            .page-break-2 {
+                display:block;
+                margin-right: 5em;
+                margin-left: 5em;
+            }
+            .page-header {
+                display:block;
+                background-repeat: no-repeat;
+                margin-top: 0mm;
+                margin-bottom: 0em;
+                margin-right: 0em;
+                margin-left: 0em
+            }
+            .page-footer {
+                color: #1269B0;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                margin-right: 1em;
+                margin-left: 1em;
+                font-size: 13px;
+            }
+            
+            ol li {
+                text-align:justify;
+                word-wrap: break-word;
+            }
+            table {
+            border-collapse: collapse;
+            }
+            
+            table, td, th {
+            border: 1px solid blue;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div class="page-header">
+            <div>
+                <apex:image style="float:left;" value="{!$Resource.LogoInteractuar}" width="250" height="100"/>
+            </div>
+            <div class="page-break">
+                <div style="background-color:#00008B;width:88%;height:84px;display:inline-block;font-size:24px;color:white;text-align:center;line-height:87px;margin-top:12px;">
+                    <strong>INFORMACIÓN PERSONAL TITULAR</strong>
+                </div>
+                <br/>
+            
+                <!--apex:outputText >Nombre: {!ava.Contacto__r.Name}</apex:outputText-->
+                <div style="width:100%;">
+                
+                <div style="width:100%;margin-right:4px;display:inline-block;margin-top:5px;">
+                    <div style="background-color:#ADD8E6;width:100%;height:22px;display:inline-block;font-size:14px;color:blue;text-align:center;line-height:20px;margin-top:5px;">
+                        <strong>INFORMACIÓN GENERAL</strong>
+                    </div>
+                    <table style="width:100%;">
+                        <td style="width:33%;height:30px;">
+                           Primer Apellido:
+                        </td>
+                        <td style="width:34%;height:30px;">
+                            Segundo Apellido: {!cliente.Segundo_Apellido__c}
+                        </td>
+                        <td style="width:33%;height:30px;">
+                            Nombres: {!cliente.Name}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <tr>
+                            <td style="width:10%;height:30px;">
+                                <div style="display:inline-block;">
+                                     Sexo:
+                                </div>
+                                <div style="display:inline-block;">
+                                     MAS
+                                     <apex:outputPanel rendered="{!if(cliente.Genero__pc=='Masculino',false, true)}">
+                                        <img src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(cliente.Genero__pc=='Masculino',true, false)}">
+                                        <img src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                                <div style="display:inline-block;margin-left:40px;">
+                                    FEM
+                                    <apex:outputPanel rendered="{!if(cliente.Genero__pc=='Femenino',false, true)}">
+                                        <img src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(cliente.Genero__pc=='Femenino',true, false)}">
+                                        <img src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                            <td style="width:28%;height:30px;">
+                                <div style="display:inline-block;">
+                                    Tipo de Identificación: {!cliente.Tipo_de_identificacion__c}
+                                </div>
+
+                                <br/>
+                                <div style="display:inline-block;">
+                                    No. Identificación: {!cliente.Numero_de_identificacion__c}
+                                </div>
+                            </td>
+                            <td style="width:28%;height:30px;">
+                                <div style="display:inline-block;">
+                                    Estado Civil:
+                                </div>
+                                <div style="display:inline-block;margin-left:17px;">
+                                    Casado
+                                    <apex:outputPanel rendered="{!if(cliente.Estado_civil__pc=='Casado',false, true)}">
+                                        <img src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(cliente.Estado_civil__pc=='Casado',true, false)}">
+                                        <img src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                                <div style="display:inline-block;margin-left:17px;">
+                                    Soltero
+                                    <apex:outputPanel rendered="{!if(cliente.Estado_civil__pc=='Soltero',false, true)}">
+                                        <img style="margin-left:23px;" src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(cliente.Estado_civil__pc=='Soltero',true, false)}">
+                                        <img style="margin-left:23px;" src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                                <div style="display:inline-block;">
+                                    Separado
+                                    <apex:outputPanel rendered="{!if(cliente.Estado_civil__pc=='Separado',false, true)}">
+                                        <img src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(cliente.Estado_civil__pc=='Separado',true, false)}">
+                                        <img src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                                <div style="display:inline-block;margin-left:10px;">
+                                    Viudo
+                                    <apex:outputPanel rendered="{!if(cliente.Estado_civil__pc=='Viudo',false, true)}">
+                                        <img style="margin-left:11px;" src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(cliente.Estado_civil__pc=='Viudo',true, false)}">
+                                        <img style="margin-left:11px;" src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                                <div style="display:inline-block;margin-left:15px;">
+                                    Unión Libre
+                                    <apex:outputPanel rendered="{!if(cliente.Estado_civil__pc=='Unión Libre',false, true)}">
+                                        <img src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(cliente.Estado_civil__pc=='Unión Libre',true, false)}">
+                                        <img src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                            <td style="width:9%;height:30px;">
+                                No. Personas a Cargo: {!cliente.Personas_a_cargo__pc}
+                            </td>
+                            <td style="width:38%;height:30px;">
+                                Fecha de Nacimiento: <apex:outputText value="{0, date, dd/MM/YYYY}"> <apex:param value="{!cliente.Fecha_de_nacimiento__c}" /> </apex:outputText>
+                            </td>
+                        </tr>
+                        
+                    </table>
+                    <table style="width:100%;">
+                        <td style="width:50%;height:30px;">
+                                DIRECCIÓN RESIDENCIA: {!cliente.Vista_direccion_empresa__c}
+                            </td>
+                            <td style="width:50%;height:30px;">
+                                
+                            </td> 
+                    </table>
+                    <table style="width:100%;">
+                        <td style="width:30%;height:30px;">
+                           DEPARTAMENTO: {!cliente.Departamento_empresa__c}
+                        </td>
+                        <td style="width:30%;height:30px;">
+                            CIUDAD: {!cliente.Ciudad_empresa__r.name}
+                        </td>
+                        <td style="width:30%;height:30px;">
+                            BARRIO-VEREDA: {!cliente.Barrio_empresa__r.name}
+                        </td>
+                        <td style="width:10%;height:30px;">
+                            ESTRATO SOCIAL: {!cliente.Estrato_empresa__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td style="width:30%;height:30px;">
+                           TELÉFONO RESIDENCIA: {!cliente.Telefono_empresa__c}
+                        </td>
+                        <td style="width:30%;height:30px;">
+                            CELULAR: {!cliente.Movil_empresa__c}
+                        </td>
+                        <td style="width:60%;height:30px;">
+                            CORREO ELECTRÓNICO: {!cliente.PersonEmail}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td style="width:30%;height:30px;">
+                           ES CABEZA DE FAMILIA: 
+                            SI
+                           <apex:outputPanel rendered="{!cliente.Cabeza_de_familia__pc}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!!cliente.Cabeza_de_familia__pc}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            NO
+                           <apex:outputPanel rendered="{!cliente.Cabeza_de_familia__pc}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!!cliente.Cabeza_de_familia__pc}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                        </td>
+                        <td style="width:70%;height:30px;">
+                            TIPO DE VIVIENDA: 
+                            PROPIA                            
+                            <apex:outputPanel rendered="{!if(cliente.Tipo_de_vivienda__pc=='Propia',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(cliente.Tipo_de_vivienda__pc=='Propia',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            ARRENDADA
+                           <apex:outputPanel rendered="{!if(cliente.Tipo_de_vivienda__pc=='Arrendada',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(cliente.Tipo_de_vivienda__pc=='Arrendada',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            FAMILIAR
+                           <apex:outputPanel rendered="{!if(cliente.Tipo_de_vivienda__pc=='Familiar',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(cliente.Tipo_de_vivienda__pc=='Familiar',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td style="width:50%;height:30px;">
+                            <div style="display:inline-block;">
+                                ESTUDIOS REALIZADOS:
+                            </div>
+                            <div style="margin-left:10px;display:inline-block;">
+                                PRIMARIA
+                               <apex:outputPanel rendered="{!if(cliente.Nivel_de_escolaridad__pc=='Primaria',false, true)}">
+                                    <img src="/img/checkbox_unchecked.gif"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(cliente.Nivel_de_escolaridad__pc=='Primaria',true, false)}">
+                                    <img src="/img/checkbox_checked.gif"/>
+                                </apex:outputPanel>
+                            </div>
+                            
+                            BACHILLERATO
+                           <apex:outputPanel rendered="{!if(cliente.Nivel_de_escolaridad__pc=='Bachillerato',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(cliente.Nivel_de_escolaridad__pc=='Bachillerato',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            TÉCNICOS
+                           <apex:outputPanel rendered="{!if(cliente.Nivel_de_escolaridad__pc=='Tecnico',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(cliente.Nivel_de_escolaridad__pc=='Tecnico',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            <div style="margin-left:132px;display:inline-block;">
+                                UNIVERSITARIOS
+                               <apex:outputPanel rendered="{!if(cliente.Nivel_de_escolaridad__pc=='Pregrado',false, true)}">
+                                    <img src="/img/checkbox_unchecked.gif"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(cliente.Nivel_de_escolaridad__pc=='Pregrado',true, false)}">
+                                    <img src="/img/checkbox_checked.gif"/>
+                                </apex:outputPanel>
+                            </div>
+                            POSGRADO
+                           <apex:outputPanel rendered="{!if(cliente.Nivel_de_escolaridad__pc=='Postgrado',false, true)}">
+                                <img style="margin-left:25px;" src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(cliente.Nivel_de_escolaridad__pc=='Postgrado',true, false)}">
+                                <img style="margin-left:25px;" src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            NINGUNO
+                           <apex:outputPanel rendered="{!if(cliente.Nivel_de_escolaridad__pc=='Ninguno',false, true)}">
+                                <img style="margin-left:6px;" src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(cliente.Nivel_de_escolaridad__pc=='Ninguno',true, false)}">
+                                <img style="margin-left:6px;" src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                        </td>
+                        <td style="width:50%;height:30px;">
+                            <div style="display:inline-block;">
+                                ACTIVIDAD:
+                            </div>
+                            <div style="margin-left:30px;display:inline-block;">
+                                INDEPENDIENTE
+                               <apex:outputPanel rendered="{!if(cliente.Ocupacion__c=='Independiente',false, true)}">
+                                    <img src="/img/checkbox_unchecked.gif"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(cliente.Ocupacion__c=='Independiente',true, false)}">
+                                    <img src="/img/checkbox_checked.gif"/>
+                                </apex:outputPanel>
+                            </div>
+                            ESTUDIANTE
+                           <apex:outputPanel rendered="{!if(cliente.Ocupacion__c=='Estudiante',false, true)}">
+                                <img style="margin-left:8px;" src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(cliente.Ocupacion__c=='Estudiante',true, false)}">
+                                <img style="margin-left:8px;" src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            JUBILADO
+                           <apex:outputPanel rendered="{!if(cliente.Ocupacion__c=='Jubilado',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(cliente.Ocupacion__c=='Jubilado',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            <div style="margin-left:113px;display:inline-block;">
+                                 EMPLEADO
+                               <apex:outputPanel rendered="{!if(cliente.Ocupacion__c=='Empleado',false, true)}">
+                                    <img style="margin-left:36px;" src="/img/checkbox_unchecked.gif"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(cliente.Ocupacion__c=='Empleado',true, false)}">
+                                    <img style="margin-left:36px;" src="/img/checkbox_checked.gif"/>
+                                </apex:outputPanel>
+                            </div>
+                           
+                            AMA DE CASA
+                           <apex:outputPanel rendered="{!if(cliente.Ocupacion__c=='Ama de Casa',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(cliente.Ocupacion__c=='Ama de Casa',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            OTRO
+                           <apex:outputPanel rendered="{!if(cliente.Ocupacion__c=='Otro',false, true)}">
+                                <img style="margin-left:28px;" src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(cliente.Ocupacion__c=='Otro',true, false)}">
+                                <img style="margin-left:28px;" src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:40%;height:30px;">    
+                            EMPRESA DONDE LABORA: {!cliente.Empresa_donde_labora__c}
+                        </td>
+                        <td  style="width:60%;height:30px;">    
+                            CARGO: {!cliente.CargoLaboral__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:60%;height:30px;">    
+                            NOMBRE DEL CÓNYUGE: {!cliente.Nombres_Completo_Conyuge__c}
+                        </td>
+ 
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:20%;height:30px;">    
+                            C.C.: {!cliente.Numero_de_identificaci_n_conyuge__c}
+                        </td>
+                        <td  style="width:40%;height:30px;">    
+                            CARGO: {!cliente.Ocupacion_Conyuge__c}
+                        </td>
+                        <td  style="width:40%;height:30px;"> 
+                            SALARIO MENSUAL: $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Ingresos_conyuge__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <div style="border-bottom:1px solid blue;width:100%;display:inline-block;">
+                        <div style="background-color:#ADD8E6;width:100%;height:22px;display:inline-block;font-size:14px;color:blue;text-align:center;line-height:20px;margin-top:5px;">
+                        <strong>INGRESOS Y EGRESOS MENSUALES PERSONALES</strong>
+                    </div>
+                    </div> 
+                    <table style="width:100%;">
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:15%;height:30px;">    
+                            INGRESOS
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:10%;height:30px;">
+                            PROPIOS
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:10%;height:30px;">    
+                            CÓNYUGE
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:10%;height:30px;">
+                            OTROS / FAMILIARES
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:15%;height:30px;">    
+                            EGRESOS
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:10%;height:30px;">
+                            PROPIOS
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:10%;height:30px;">    
+                            CÓNYUGE
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:10%;height:30px;">
+                            OTROS / FAMILIARES
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:15%;">    
+                            SUELDO/HONORARIO
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Sueldo_Honorario__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:10%;">    
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Ingresos_conyuge__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                        <td  style="width:15%;">    
+                            HOGAR/ALQUILER
+
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!if(cliente.Hogar__c == null,0,cliente.Hogar__c) + if(cliente.Alquiler__c == null,0,cliente.Alquiler__c)}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:10%;">    
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:15%;">    
+                            OTROS INGRESOS (ANEXA COMPROBANTE)
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                        <td  style="width:10%;">    
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Otros_ingresos_familiares__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:15%;">    
+                            GASTOS FAMILIARES
+                        </td>
+                        <td  style="width:10%;">
+                             $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Educacion__c}" /> </apex:outputText> 
+                        </td>
+                        <td  style="width:10%;">    
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Otros_egresos_familiares__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:15%;">    
+                            TOTAL INGRESOS
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Sueldo_Honorario__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:10%;">    
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Ingresos_conyuge__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Otros_ingresos_familiares__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:15%;">    
+                            PRESTAMOS
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Prestamos__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:10%;">    
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Egresos_conyuge__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:15%;">    
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                        <td  style="width:10%;">    
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                        <td  style="width:15%;">    
+                            TOTAL EGRESOS
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!if(cliente.Hogar__c == null,0,cliente.Hogar__c) + if(cliente.Alquiler__c == null,0,cliente.Alquiler__c) + if(cliente.Educacion__c == null,0,cliente.Educacion__c) + if(cliente.Prestamos__c == null,0,cliente.Prestamos__c)}" /> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">  
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Egresos_conyuge__c}" /> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Otros_egresos_familiares__c}" /> </apex:outputText>
+                            
+                        </td>
+                    </table>
+                     <table style="width:100%;">
+                        <td  style="width:15%;">    
+                            INGRESO DISPONIBLE TOTAL
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!cliente.Ingreso_disponible_total__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">    
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                        <td  style="width:15%;">    
+                        
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                        <td  style="width:10%;">    
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                    </table>
+                </div>
+            </div>
+            <br/> 
+            </div>
+        </div>
+        <!--Informacion famiempresas--> 
+         <div class="page-header">
+            <div>
+                <apex:image style="float:left;" value="{!$Resource.LogoInteractuar}" width="250" height="100"/>
+            </div>
+            <div class="page-break">
+                <div style="background-color:#00008B;width:88%;height:84px;display:inline-block;font-size:24px;color:white;text-align:center;line-height:87px;margin-top:12px;">
+                    <strong>INFORMACIÓN FAMIEMPRESA</strong>
+                </div>
+                <br/>
+                <div style="width:100%;">
+                
+                <div style="width:100%;margin-right:4px;display:inline-block;margin-top:5px;">
+                    <div style="background-color:#ADD8E6;width:100%;height:22px;display:inline-block;font-size:14px;color:blue;text-align:center;line-height:20px;margin-top:5px;">
+                        <strong>INFORMACIÓN GENERAL</strong>
+                    </div>
+                    <table style="width:100%;">
+                        <td style="width:65%;">
+                           NOMBRE DE LA FAMIEMPRESA: {!fami.Name}
+                        </td>
+                        <td style="width:25%;">
+                            TEL: {!fami.Telefono_empresa__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <tr>
+                             <td style="width:50%;">
+                               DIRECCIÓN: {!fami.Vista_direccion_empresa__c}
+                            </td>
+                            <td style="width:50%;">
+                                <div style="display:inline-block;">
+                                    BARRIO/VEREDA: {!fami.Barrio_empresa__r.Name}
+                                </div>
+                                <br/>
+                                <div style="display:inline-block;">
+                                     R
+                                    <apex:outputPanel rendered="{!fami.Ruralidad_domicilio_empresa__c}">
+                                        <img src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!!fami.Ruralidad_domicilio_empresa__c}">
+                                        <img src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                                <div style="display:inline-block;margin-left:125px;">
+                                    U
+                                    <apex:outputPanel rendered="{!!fami.Ruralidad_domicilio_empresa__c}">
+                                        <img src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!fami.Ruralidad_domicilio_empresa__c}">
+                                        <img src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                           
+                        </tr>
+                        
+                    </table>
+                    <table style="width:100%;">
+                        <td style="width:20%;">
+                            CIUDAD: {!fami.Ciudad_empresa__r.Name}
+                        </td>
+                        <td style="width:30%;">
+                            ACTIVIDAD ECONÓMICA: {!fami.Actividad_economica__r.name}
+                       </td> 
+                       <td style="width:10%;">
+                            AÑOS EXPERIENCIA: {!fami.Anios_de_experiencia__c}
+                       </td>
+                       <td style="width:10%;">
+                            INDUSTRIA: {!fami.Industria__c}
+                       </td>
+                       <td style="width:10%;">
+                           FECHA DE INICIO: <apex:outputText value="{0, date, dd/MM/YYYY}"> <apex:param value="{!fami.Fecha_de_creacion_de_empresa__c}" /> </apex:outputText>
+                            
+                       </td>
+                       <td style="width:10%;">
+                            EMPLEOS ACTUALES: {!fami.Numero_de_empleados__c}
+                       </td>
+                       <td style="width:13%;">
+                            EMPLEOS A GENERAR: {!fami.Empleos_a_generar__c}
+                       </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td style="width:45%;">
+                           Número de afiliados incluyendo el titular al servicio exequial voluntario: {!opp.Numero_de_Afiliados_a_Prever__c}
+                        </td>
+                        <td style="width:10%;">
+                            ALIANZA: {!qlitem.Codigo_Alianza__c}
+                        </td>
+                        <td style="width:15%;">
+                            FONDOS SUGERIDOS: {!opp.Fondo__c}
+                        </td>
+                        <td style="width:15%;">
+                            CANCELA CRÉDITO(S): {!opp.Numero_de_credito_a_cancelar_1__c} - 
+                            {!opp.Numero_de_credito_a_cancelar_2__c} - 
+                            {!opp.Numero_de_credito_a_cancelar_3__c}
+                        </td>
+                        <td style="width:15%;">
+                            CLIENTE VISITADO:
+                            <div style="display:inline-block;">
+                                SI
+                                <apex:outputPanel rendered="{!if(opp.Cliente_con_visita__c=='Si',false, true)}">
+                                    <img src="/img/checkbox_unchecked.gif"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(opp.Cliente_con_visita__c=='Si',true, false)}">
+                                    <img src="/img/checkbox_checked.gif"/>
+                                </apex:outputPanel>
+                            </div>
+                            <div style="display:inline-block;">
+                                NO
+                                <apex:outputPanel rendered="{!if(opp.Cliente_con_visita__c=='No',false, true)}">
+                                    <img src="/img/checkbox_unchecked.gif"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(opp.Cliente_con_visita__c=='No',true, false)}">
+                                    <img src="/img/checkbox_checked.gif"/>
+                                </apex:outputPanel>
+                            </div>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="background-color:#ADD8E6;color:blue;width:40%;height:30px;">    
+                            CAPITAL DE TRABAJO
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;width:30%;height:30px;">    
+                            ACTIVOS FIJOS Y OTROS
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;width:30%;height:30px;">    
+                            SERVICIOS EMPRESARIAL DE CONOCIMIENTO
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            INVENTARIO
+                        </td>
+                        <td  style="width:10%;">
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Inventario__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">    
+                            MAQUINARIA Y EQUIPO
+                        </td>
+                        <td  style="width:10%;">
+                          $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Maquinaria_y_equipo__c}" /> </apex:outputText>
+
+                        </td>
+                        <td  style="width:20%;">    
+                            CAPACITACIÓN
+                        </td>
+                        <td  style="width:10%;">    
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Capacitacion__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            PAGO A PROVEEDORES
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Pago_a_proveedores__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">    
+                            VEHÍCULO
+                        </td>
+                        <td  style="width:10%;">
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Vehiculo__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">    
+                            CREACIÓN DE EMPRESAS
+                        </td>
+                        <td  style="width:10%;">    
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Creacion_de_empresas__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            PAGO A TERCEROS
+                        </td>
+                        <td  style="width:10%;">
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Pago_a_terceros__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">    
+                            VIVIENDA
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Vivienda__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">    
+                            ASESORIAS
+                        </td>
+                        <td  style="width:10%;">    
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Asesorias__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            FINANCIAR CUENTAS X COBRAR
+                        </td>
+                        <td  style="width:10%;">
+                         $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Financiar_cuentas_por_cobrar__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">    
+                            LOCAL
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Local__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">    
+                            SERVICIOS CCA
+                        </td>
+                        <td  style="width:10%;">    
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Servicios_CCA__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            OTRO
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Otro_Capital__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">    
+                            TERRENO
+                        </td>
+                        <td  style="width:10%;">
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Terreno__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">    
+                            OTROS
+                        </td>
+                        <td  style="width:10%;">    
+                             $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Otros_empresarialConocimiento__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            CANCELAR CRÉDITO INTERACTUAR
+                        </td>
+                        <td  style="width:10%;">
+                         $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Cancelar_credito_Interactuar__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">    
+                            OTROS
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Otros__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">    
+                            
+                        </td>
+                        <td  style="width:10%;">    
+                            
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">  
+                            TOTAL CAPITAL DE TRABAJO
+                        </td>
+                        <td  style="width:10%;">
+                             $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Total_Capital_de_Trabajo__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">    
+                            CUAL
+                        </td>
+                        <td  style="width:10%;">
+                            {!opp.Cuales__c}
+                        </td>
+                        <td  style="width:20%;">    
+                            CUAL
+                        </td>
+                        <td  style="width:10%;">    
+                            {!opp.Cual_empresarialConocimeinto__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;"> 
+                        </td>
+                        <td  style="width:10%;">
+                        </td>
+                        <td  style="width:20%;">    
+                            TOTAL ACTIVOS FIJO Y OTROS
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Total_Activos_Fijos_y_Otros__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;"> 
+                        </td>
+                        <td  style="width:10%;">
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;"> 
+                        </td>
+                        <td  style="width:10%;">
+                        </td>
+                        <td  style="width:20%;">    
+                            TOTAL INVERSIÓN
+                        </td>
+                        <td  style="width:10%;">
+                               $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Amount}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;"> 
+                        </td>
+                        <td  style="width:10%;">
+                        </td>
+                    </table>
+                    <div style="background-color:#ADD8E6;width:100%;height:22px;display:inline-block;font-size:14px;color:blue;text-align:center;line-height:20px;margin-top:5px;">
+                        <strong>BALANCE GENERAL DE LA EMPRESA DE LA FAMIEMPRESA</strong>
+                    </div> 
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            CAJA Y BANCOS
+                        </td>
+                        <td  style="width:20%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Caja_y_bancos__c}" /> </apex:outputText>                            
+                        </td>
+                        <td  style="width:30%;">    
+                            CUENTAS POR PAGAR INTERACTUAR
+                        </td>
+                        <td  style="width:20%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Cuentas_por_pagar_Interactuar__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            CUENTAS POR COBRAR COMERCIALES
+                        </td>
+                        <td  style="width:20%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Cuentas_por_cobrar_comerciales__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                            OTRAS OBLIGACIONES FINANCIERAS
+                        </td>
+                        <td  style="width:20%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Otras_obligaciones_financieras__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            INVENTARIOS
+                        </td>
+                        <td  style="width:20%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Inventario_balance__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                            PROVEEDORES
+                        </td>
+                        <td  style="width:20%;">
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Proveedores__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            OTRAS CUENTAS POR COBRAR
+                        </td>
+                        <td  style="width:20%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Otras_cuentas_por_cobrar__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                            OTRAS CUENTAS POR PAGAR
+                        </td>
+                        <td  style="width:20%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Otras_cuentas_por_pagar__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            ACTIVOS FIJOS
+                        </td>
+                        <td  style="width:20%;">
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Activos_fijos__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                            <strong>TOTAL PASIVO (B)</strong>
+                        </td>
+                        <td  style="width:20%;">
+                          $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Total_pasivo__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            OTROS ACTIVOS
+                        </td>
+                        <td  style="width:20%;">
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Otros_activos__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                            <strong>PATRIMONIO C-(A-B)</strong>
+                        </td>
+                        <td  style="width:20%;">
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Patrimonio__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="text-align:RIGHT;width:30%;">    
+                            <strong>TOTAL ACTIVOS (A)</strong>
+                        </td>
+                        <td  style="width:20%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Total_activos_balance__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="text-align:RIGHT;width:30%;">    
+                            <strong>TOTAL PASIVOS + PATRIMONIO (B+C)</strong>
+                        </td>
+                        <td  style="width:20%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!opp.Total_pasivo_mas_patrimonio__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                    
+                </div>
+            </div>
+            <br/>  
+            </div>
+        </div>
+        <div class="page-header">
+            <div>
+                <apex:image style="float:left;" value="{!$Resource.LogoInteractuar}" width="250" height="100"/>
+            </div>
+            <div class="page-break">
+                <div style="background-color:#00008B;width:88%;height:84px;display:inline-block;font-size:24px;color:white;text-align:center;line-height:87px;margin-top:12px;">
+                    <strong>INFORMACIÓN FAMIEMPRESA</strong>
+                </div>
+                <br/>
+                <div style="width:100%;">
+                
+                <div style="width:100%;margin-right:4px;display:inline-block;margin-top:5px;">
+                    <div style="background-color:#ADD8E6;width:100%;height:22px;display:inline-block;font-size:14px;color:blue;text-align:center;line-height:20px;margin-top:5px;">
+                        <strong>PRODUCTOS</strong>
+                    </div> 
+                    <table style="width:100%;">
+                        <td  style="width:50%;">    
+                            PRINCIPALES PRODUCTOS/SERVICIOS #1
+                        </td>
+                        <td  style="width:50%;">
+                             {!fami.Principales_productos_servicios_1__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:50%;">    
+                            PRINCIPALES PRODUCTOS/SERVICIOS #2
+                        </td>
+                        <td  style="width:50%;">
+                             {!fami.Principales_productos_servicios_2__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:50%;">    
+                            PRINCIPALES PRODUCTOS/SERVICIOS #3
+                        </td>
+                        <td  style="width:50%;">
+                             {!fami.Principales_productos_servicios_3__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:50%;">    
+                            PRINCIPALES PRODUCTOS/SERVICIOS #4
+                        </td>
+                        <td  style="width:50%;">
+                             {!fami.Principales_productos_servicios_4__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:50%;">    
+                            PRINCIPALES PRODUCTOS/SERVICIOS #5
+                        </td>
+                        <td  style="width:50%;">
+                             {!fami.Principales_productos_servicios_5__c}
+                        </td>
+                    </table>
+                    <div style="background-color:#ADD8E6;width:100%;height:22px;display:inline-block;font-size:14px;color:blue;text-align:center;line-height:20px;margin-top:5px;">
+                        <strong>ESTADO DE INGRESOS Y EGRESOS DE LA FAMIEMPRESA PERIODO(MES)_________</strong>            <strong>INDICADORES</strong>
+                    </div> 
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            INGRESOS
+                        </td>
+                        <td  style="width:20%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Ingresos_ventas__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                            
+                        </td>
+                        <td  style="width:20%;">
+                            DÍAS CARTERA: {!opp.Dias_de_Cartera__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            COSTO MERCANCÍA VENDIDA
+                        </td>
+                        <td  style="width:20%;">
+                      $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Costo_mercancia_vendida__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                            
+                        </td>
+                        <td  style="width:20%;">
+                            
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            UTILIDAD BRUTA
+                        </td>
+                        <td  style="width:20%;">
+                            
+                        </td>
+                        <td  style="width:30%;">    
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Utilidad_bruta__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">
+                            DÍAS DE INVENTARIO: {!opp.Dias_de_Inventarios__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            GASTOS DE ADMINISTRACIÓN Y VENTAS
+                        </td>
+                        <td  style="width:20%;">
+                        $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Gastos_de_administracion_y_ventas__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                            
+                        </td>
+                        <td  style="width:20%;">
+                            
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            GASTOS LABORALES
+                        </td>
+                        <td  style="width:20%;">
+                         $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Gastos_laborales__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                        </td>
+                        <td  style="width:20%;">
+                            CICLO OPERACIONAL: {!opp.Ciclo_Operacional__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            SALARIOS(S) DUEÑO(S) FAMIEMPRESA
+                        </td>
+                        <td  style="width:20%;">
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Salario_s_due_o_s_empresa__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                        </td>
+                        <td  style="width:20%;">
+                            
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            UTILIDAD OPERACIONAL
+                        </td>
+                        <td  style="width:20%;">
+                            
+                        </td>
+                        <td  style="width:30%;">    
+                         $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Utilidad_operacional__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">
+                            % ENDEUDAMIENTO: {!opp.Porcentaje_de_Endeudamiento__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            CUOTA(S) INTERACTUAR
+                        </td>
+                        <td  style="width:20%;">
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Cuota_s_interactuar__c}" /> </apex:outputText>
+
+                        </td>
+                        <td  style="width:30%;">    
+                            
+                        </td>
+                        <td  style="width:20%;">
+                            
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            CUOTA(S) OTRAS OBLIGACIONES
+                        </td>
+                        <td  style="width:20%;">
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Cuota_s_otras_obligaciones__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                            
+                        </td>
+                        <td  style="width:20%;">
+                            % MARGEN BRUTO: {!opp.Margen_Bruto__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            OTROS INGRESOS
+                        </td>
+                        <td  style="width:20%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Otros_ingresos__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                            
+                        </td>
+                        <td  style="width:20%;">
+                            
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            OTROS EGRESOS
+                        </td>
+                        <td  style="width:20%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Otros_egresos__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:30%;">    
+                            
+                        </td>
+                        <td  style="width:20%;">
+                            
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:30%;">    
+                            DISPONIBILIDAD NETA FAMIEMPRESA
+                        </td>
+                        <td  style="width:20%;">
+                        </td>
+                        <td  style="width:30%;">    
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Disponibilidad_neta_empresa__c}" /> </apex:outputText>
+                        </td>
+                        <td  style="width:20%;">
+                           % MARGEN NETO: {!opp.Margen_Neto__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:100%;">    
+                            CUOTA $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!fami.Cuota_credito_cancelar__c}" /> </apex:outputText>
+                        </td>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </div>
+        
+        <!--Informacion de los avales-->
+        <div style="page-break-after:always;"/>
+        <apex:repeat var="ava" value="{!lstAvales}">
+        <div class="page-header">
+            <div>
+                <apex:image style="float:left;" value="{!$Resource.LogoInteractuar}" width="250" height="100"/>
+            </div>
+            <div class="page-break">
+                <div style="background-color:#00008B;width:88%;height:84px;display:inline-block;font-size:24px;color:white;text-align:center;line-height:87px;margin-top:12px;">
+                    <strong>INFORMACIÓN PERSONAL AVAL</strong>
+                </div>
+                <br/>
+                <div style="width:100%;">
+                
+                <div style="width:100%;margin-right:4px;display:inline-block;margin-top:5px;">
+                    <div style="background-color:#ADD8E6;width:100%;height:22px;display:inline-block;font-size:14px;color:blue;text-align:center;line-height:20px;margin-top:5px;">
+                        <strong>INFORMACIÓN GENERAL</strong>
+                    </div>
+                    <table style="width:100%;">
+                        <td style="width:50%;height:30px;">
+                            Segundo Apellido: {!ava.Contacto__r.Segundo_Apellido__c}
+                        </td>
+                        <td style="width:50%;height:30px;">
+                            Nombres: {!ava.Contacto__r.Name}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <tr>
+                            <td style="width:10%;height:30px;">
+                                <div style="display:inline-block;">
+                                     Sexo:
+                                </div>
+                                <div style="display:inline-block;">
+                                     MAS
+                                     <apex:outputPanel rendered="{!if(ava.Contacto__r.Genero__c=='Masculino',false, true)}">
+                                        <img src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Genero__c=='Masculino',true, false)}">
+                                        <img src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                                <div style="display:inline-block;margin-left:40px;">
+                                    FEM
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Genero__c=='Femenino',false, true)}">
+                                        <img src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Genero__c=='Femenino',true, false)}">
+                                        <img src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                            <td style="width:28%;height:30px;">
+                                <div style="display:inline-block;">
+                                    Tipo de Identificación: {!ava.Contacto__r.Tipo_de_identificacion__c}
+                                </div>
+
+                                <br/>
+                                <div style="display:inline-block;">
+                                    No. Identificación: {!ava.Contacto__r.Numero_de_identificacion__c}
+                                </div>
+                            </td>
+                            <td style="width:28%;height:30px;">
+                                <div style="display:inline-block;">
+                                    Estado Civil:
+                                </div>
+                                <div style="display:inline-block;margin-left:17px;">
+                                    Casado
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Estado_civil__c=='Casado',false, true)}">
+                                        <img src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Estado_civil__c=='Casado',true, false)}">
+                                        <img src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                                <div style="display:inline-block;margin-left:17px;">
+                                    Soltero
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Estado_civil__c=='Soltero',false, true)}">
+                                        <img style="margin-left:23px;" src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Estado_civil__c=='Soltero',true, false)}">
+                                        <img style="margin-left:23px;" src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                                <div style="display:inline-block;">
+                                    Separado
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Estado_civil__c=='Separado',false, true)}">
+                                        <img src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Estado_civil__c=='Separado',true, false)}">
+                                        <img src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                                <div style="display:inline-block;margin-left:10px;">
+                                    Viudo
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Estado_civil__c=='Viudo',false, true)}">
+                                        <img style="margin-left:11px;" src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Estado_civil__c=='Viudo',true, false)}">
+                                        <img style="margin-left:11px;" src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                                <div style="display:inline-block;margin-left:15px;">
+                                    Unión Libre
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Estado_civil__c=='Unión Libre',false, true)}">
+                                        <img src="/img/checkbox_unchecked.gif"/>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!if(ava.Contacto__r.Estado_civil__c=='Unión Libre',true, false)}">
+                                        <img src="/img/checkbox_checked.gif"/>
+                                    </apex:outputPanel>
+                                </div>
+                            </td>
+                            <td style="width:9%;height:30px;">
+                                No. Personas a Cargo: {!ava.Contacto__r.Personas_a_cargo__c}
+                            </td>
+                            <td style="width:38%;height:30px;">
+                                Fecha de Nacimiento: <apex:outputText value="{0, date, dd/MM/YYYY}"> <apex:param value="{!ava.Contacto__r.Birthdate}" /> </apex:outputText>
+                            </td>
+                        </tr>
+                        
+                    </table>
+                    <table style="width:100%;">
+                        <td style="width:50%;height:30px;">
+                                DIRECCIÓN RESIDENCIA: {!ava.Contacto__r.Vista_direccion_contacto__c}
+                            </td>
+                            <td style="width:50%;height:30px;">
+                                
+                            </td> 
+                    </table>
+                    <table style="width:100%;">
+                        <td style="width:30%;height:30px;">
+                           DEPARTAMENTO: {!ava.Contacto__r.Departamento_contacto__c}
+                        </td>
+                        <td style="width:30%;height:30px;">
+                            CIUDAD: {!ava.Contacto__r.Ciudad_contacto__r.Name}
+                        </td>
+                        <td style="width:30%;height:30px;">
+                            BARRIO-VEREDA: {!ava.Contacto__r.Barrio_contacto__r.Name}
+                        </td>
+                        <td style="width:10%;height:30px;">
+                            ESTRATO SOCIAL: {!ava.Contacto__r.Estrato_contacto__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td style="width:30%;height:30px;">
+                           TELÉFONO RESIDENCIA: {!ava.Contacto__r.Telefono_contacto__c}
+                        </td>
+                        <td style="width:30%;height:30px;">
+                            CELULAR: {!ava.Contacto__r.Movil_contacto__c}
+                        </td>
+                        <td style="width:60%;height:30px;">
+                            CORREO ELECTRÓNICO: {!ava.Contacto__r.Email}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td style="width:30%;height:30px;">
+                           ES CABEZA DE FAMILIA: 
+                            SI
+                           <apex:outputPanel rendered="{!ava.Contacto__r.Cabeza_de_familia__c}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!!ava.Contacto__r.Cabeza_de_familia__c}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            NO
+                           <apex:outputPanel rendered="{!ava.Contacto__r.Cabeza_de_familia__c}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!!ava.Contacto__r.Cabeza_de_familia__c}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                        </td>
+                        <td style="width:70%;height:30px;">
+                            TIPO DE VIVIENDA: 
+                            PROPIA                            
+                            <apex:outputPanel rendered="{!if(ava.Contacto__r.Tipo_de_vivienda__c=='Propia',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(ava.Contacto__r.Tipo_de_vivienda__c=='Propia',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            ARRENDADA
+                           <apex:outputPanel rendered="{!if(ava.Contacto__r.Tipo_de_vivienda__c=='Arrendada',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(ava.Contacto__r.Tipo_de_vivienda__c=='Arrendada',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            FAMILIAR
+                           <apex:outputPanel rendered="{!if(ava.Contacto__r.Tipo_de_vivienda__c=='Familiar',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(ava.Contacto__r.Tipo_de_vivienda__c=='Familiar',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td style="width:50%;height:30px;">
+                            <div style="display:inline-block;">
+                                ESTUDIOS REALIZADOS:
+                            </div>
+                            <div style="margin-left:10px;display:inline-block;">
+                                PRIMARIA
+                               <apex:outputPanel rendered="{!if(ava.Contacto__r.Nivel_de_escolaridad__c=='Primaria',false, true)}">
+                                    <img src="/img/checkbox_unchecked.gif"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(ava.Contacto__r.Nivel_de_escolaridad__c=='Primaria',true, false)}">
+                                    <img src="/img/checkbox_checked.gif"/>
+                                </apex:outputPanel>
+                            </div>
+                            
+                            BACHILLERATO
+                           <apex:outputPanel rendered="{!if(ava.Contacto__r.Nivel_de_escolaridad__c=='Bachillerato',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(ava.Contacto__r.Nivel_de_escolaridad__c=='Bachillerato',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            TÉCNICOS
+                           <apex:outputPanel rendered="{!if(ava.Contacto__r.Nivel_de_escolaridad__c=='Tecnico',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(ava.Contacto__r.Nivel_de_escolaridad__c=='Tecnico',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            <div style="margin-left:132px;display:inline-block;">
+                                UNIVERSITARIOS
+                               <apex:outputPanel rendered="{!if(ava.Contacto__r.Nivel_de_escolaridad__c=='Pregrado',false, true)}">
+                                    <img src="/img/checkbox_unchecked.gif"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(ava.Contacto__r.Nivel_de_escolaridad__c=='Pregrado',true, false)}">
+                                    <img src="/img/checkbox_checked.gif"/>
+                                </apex:outputPanel>
+                            </div>
+                            POSGRADO
+                           <apex:outputPanel rendered="{!if(ava.Contacto__r.Nivel_de_escolaridad__c=='Postgrado',false, true)}">
+                                <img style="margin-left:25px;" src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(ava.Contacto__r.Nivel_de_escolaridad__c=='Postgrado',true, false)}">
+                                <img style="margin-left:25px;" src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            NINGUNO
+                           <apex:outputPanel rendered="{!if(ava.Contacto__r.Nivel_de_escolaridad__c=='Ninguno',false, true)}">
+                                <img style="margin-left:6px;" src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(ava.Contacto__r.Nivel_de_escolaridad__c=='Ninguno',true, false)}">
+                                <img style="margin-left:6px;" src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                        </td>
+                        <td style="width:50%;height:30px;">
+                            <div style="display:inline-block;">
+                                ACTIVIDAD:
+                            </div>
+                            <div style="margin-left:30px;display:inline-block;">
+                                INDEPENDIENTE
+                               <apex:outputPanel rendered="{!if(ava.Contacto__r.Ocupacion__c=='Independiente',false, true)}">
+                                    <img src="/img/checkbox_unchecked.gif"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(ava.Contacto__r.Ocupacion__c=='Independiente',true, false)}">
+                                    <img src="/img/checkbox_checked.gif"/>
+                                </apex:outputPanel>
+                            </div>
+                            ESTUDIANTE
+                           <apex:outputPanel rendered="{!if(ava.Contacto__r.Ocupacion__c=='Estudiante',false, true)}">
+                                <img style="margin-left:8px;" src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(ava.Contacto__r.Ocupacion__c=='Estudiante',true, false)}">
+                                <img style="margin-left:8px;" src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            JUBILADO
+                           <apex:outputPanel rendered="{!if(ava.Contacto__r.Ocupacion__c=='Jubilado',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(ava.Contacto__r.Ocupacion__c=='Jubilado',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            <div style="margin-left:113px;display:inline-block;">
+                                 EMPLEADO
+                               <apex:outputPanel rendered="{!if(ava.Contacto__r.Ocupacion__c=='Empleado',false, true)}">
+                                    <img style="margin-left:36px;" src="/img/checkbox_unchecked.gif"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!if(ava.Contacto__r.Ocupacion__c=='Empleado',true, false)}">
+                                    <img style="margin-left:36px;" src="/img/checkbox_checked.gif"/>
+                                </apex:outputPanel>
+                            </div>
+                           
+                            AMA DE CASA
+                           <apex:outputPanel rendered="{!if(ava.Contacto__r.Ocupacion__c=='Ama de Casa',false, true)}">
+                                <img src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(ava.Contacto__r.Ocupacion__c=='Ama de Casa',true, false)}">
+                                <img src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                            OTRO
+                           <apex:outputPanel rendered="{!if(ava.Contacto__r.Ocupacion__c=='Otro',false, true)}">
+                                <img style="margin-left:28px;" src="/img/checkbox_unchecked.gif"/>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(ava.Contacto__r.Ocupacion__c=='Otro',true, false)}">
+                                <img style="margin-left:28px;" src="/img/checkbox_checked.gif"/>
+                            </apex:outputPanel>
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:40%;height:30px;">    
+                            EMPRESA DONDE LABORA: {!ava.Contacto__r.Empresa_donde_labora__c}
+                        </td>
+                        <td  style="width:60%;height:30px;">    
+                            CARGO: {!ava.Contacto__r.Cargo_laboral__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:100%;height:30px;">    
+                            NOMBRE DEL CÓNYUGE: {!ava.Contacto__r.Nombres_Completo_Conyuge__c}
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:20%;height:30px;">    
+                            C.C.: {!ava.Contacto__r.Numero_de_identificaci_n_conyuge__c}
+                        </td>
+                        <td  style="width:40%;height:30px;">    
+                            CARGO: {!ava.Contacto__r.Ocupacion_Conyuge__c}
+                        </td>
+                        <td  style="width:40%;height:30px;">    
+                            SALARIO MENSUAL: $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Ingresos_conyuge__c}"/> </apex:outputText>
+                             
+                        </td>
+                    </table>
+                    <div style="border-bottom:1px solid blue;width:100%;display:inline-block;">
+                        <div style="background-color:#ADD8E6;width:100%;height:22px;display:inline-block;font-size:14px;color:blue;text-align:center;line-height:20px;margin-top:5px;">
+                        <strong>INGRESOS Y EGRESOS MENSUALES PERSONALES</strong>
+                    </div>
+                    </div> 
+                    <table style="width:100%;">
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:15%;height:30px;">    
+                            INGRESOS
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:10%;height:30px;">
+                            PROPIOS
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:10%;height:30px;">    
+                            CÓNYUGE
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:10%;height:30px;">
+                            OTROS / FAMILIARES
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:15%;height:30px;">    
+                            EGRESOS
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:10%;height:30px;">
+                            PROPIOS
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:10%;height:30px;">    
+                            CÓNYUGE
+                        </td>
+                        <td  style="background-color:#ADD8E6;color:blue;text-align:center;width:10%;height:30px;">
+                            OTROS / FAMILIARES
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <table style="width:100%;">
+                        <td  style="width:15%;">    
+                            SUELDO/HONORARIO
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Sueldo_Honorario__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">    
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Ingresos_conyuge__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                        <td  style="width:15%;">    
+                            HOGAR/ALQUILER
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Alquiler__c + ava.Contacto__r.Hogar__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">    
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                    </table>
+                        
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:15%;">    
+                            OTROS INGRESOS (ANEXA COMPROBANTE)
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                        <td  style="width:10%;">    
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Otros_ingresos_familiares__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:15%;">    
+                            GASTOS FAMILIARES
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Educacion__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">    
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Otros_egresos_familiares__c}"/> </apex:outputText>
+                            
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:15%;">    
+                            TOTAL INGRESOS
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Sueldo_Honorario__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">    
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Ingresos_conyuge__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Otros_ingresos_familiares__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:15%;">    
+                            PRÉSTAMOS
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Prestamos__c}"/> </apex:outputText>
+                             
+                        </td>
+                        <td  style="width:10%;">   
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Egresos_conyuge__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            
+                        </td>
+                    </table>
+                    <table style="width:100%;">
+                        <td  style="width:15%;">    
+                            INGRESO DISPONIBLE TOTAL
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Ingreso_disponible_total__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">    
+                        </td>
+                        <td  style="width:10%;">
+                        </td>
+                        <td  style="width:15%;">    
+                            TOTAL EGRESOS
+                        </td>
+                        <td  style="width:10%;">
+                           $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Hogar__c + ava.Contacto__r.Alquiler__c + ava.Contacto__r.Educacion__c + ava.Contacto__r.Prestamos__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">   
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Egresos_conyuge__c}"/> </apex:outputText>
+                            
+                        </td>
+                        <td  style="width:10%;">
+                            $<apex:outputText value="{0, Number, #,##0}"> <apex:param value="{!ava.Contacto__r.Otros_egresos_familiares__c}"/> </apex:outputText>
+                            
+                        </td>
+                    </table>
+                    
+                </div>
+            </div>
+            </div>
+        </div>
+        </apex:repeat>
+    </body>
+</apex:page>

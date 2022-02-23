@@ -1,0 +1,145 @@
+<aura:component controller="IT_Oncredit_ctr"
+access="global" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction">
+
+    <!--create a component attribut -->
+    <aura:attribute name="recordId"       type="String" />
+    <aura:attribute name="urlOncredit"    type="String" />    
+    <aura:attribute name="tooltip"        type="String" default="Integración Oncredit"/>
+    <aura:attribute name="label"          type="String" default="https://Oncredit/Firmantes"/>
+    <aura:attribute name="tooltipUX"      type="String" default="Integración Oncredit"/>
+    <aura:attribute name="labelUX"        type="String" default="https://Oncredit/Interfaz"/>
+    <aura:attribute name="urlConstruida"  type="boolean" default="FALSE" />
+    <aura:attribute name="Spinner"        type="boolean" default="FALSE" />
+    <aura:attribute name="quickAction"    type="boolean" default="FALSE"  />
+    <aura:attribute name="globalAction"   type="boolean" default="FALSE"  />
+  
+    <aura:handler   name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--loading spinner start... style=Brand Medium (blue dots)-->
+    <aura:if isTrue="{!v.Spinner}">
+      <div aura:id="spinnerId" class="slds-spinner_container">
+        <div
+          class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative"
+          role="alert"
+        >
+          <span class="slds-assistive-text">Loading</span>
+          <div class="slds-spinner__dot-a"></div>
+          <div class="slds-spinner__dot-b"></div>
+        </div>
+      </div>
+    </aura:if>
+    <!-- Loading spinner end-->
+    
+     <!-- Componentes para ejecucion de accion rapida -->
+    <aura:if isTrue="{! v.quickAction }">
+        <article class="slds-card slds-card_boundary">
+            <div class="slds-card__header slds-grid slds-box_xx-small">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">                                        
+                    
+                    <div class="slds-media__figure">
+                    <lightning:icon iconName="custom:custom57" title="Firmantes"/>
+                    </div>
+
+                    <div class="slds-media__body">
+                    <div class="slds-m-top_medium slds-m-bottom_x-large">
+                    <h2 class="slds-text-heading_small">
+                    Firmantes
+                    </h2>
+                    </div>
+                    </div>
+
+                    <!-- <div class="slds-no-flex">
+                    <lightning:button
+                    variant="brand"
+                    label="Consultar Firmantes"
+                    title="Consultar Firmantes"
+                    onclick="{! c.firman }"
+                    />
+                    </div> -->
+
+                </header>
+            </div>
+            <!-- <div class="slds-card__body slds-card__body_inner">
+            </div> -->
+            <footer class="slds-card__footer">
+                <aura:if isTrue="{! v.urlConstruida }">
+                <div aura:id="container">
+                <div class="slds-m-top_medium slds-m-bottom_x-large">
+                <div class="slds-p-around_medium">
+                <p><lightning:formattedUrl value="{! v.urlOncredit }" tooltip="{! v.tootip }" label="{! v.label }" target="_blank" onclick="{! c.cerrarVenta }"/></p>
+                </div>
+                </div>
+                </div>
+                </aura:if>
+
+                <aura:if isTrue="{!! v.urlConstruida }">
+                <div aura:id="container">
+                <div class="slds-m-top_medium slds-m-bottom_x-large">
+                <div class="slds-p-around_medium">
+                <p>...</p>
+                </div>
+                </div>
+                </div>
+                </aura:if>
+            </footer>        
+        </article>
+    </aura:if>
+
+    <!-- Componentes para ejecucion de accion rapida -->
+
+
+    <!-- Componentes para ejecucion de accion global -->
+    <aura:if isTrue="{! v.globalAction }">
+            <h1><p></p></h1>
+        <article class="slds-card slds-card_boundary">
+            <div class="slds-card__header slds-grid slds-box_xx-small">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate"> 
+
+                    <div class="slds-media__figure">
+                        <lightning:icon iconName="custom:custom57" title="Firmantes"/>
+                    </div>
+
+                    <div class="slds-media__body">
+                    <div class="slds-m-top_medium slds-m-bottom_x-large">
+                    <h2 class="slds-text-heading_small">
+                    Interfaz Oncredit
+                    </h2>
+                    </div>
+                    </div>
+
+                    <!-- <div class="slds-no-flex">
+                    <lightning:button
+                    variant="brand"
+                    label="Interfaz de OnCredit"
+                    title="Interfaz de OnCredit"
+                    onclick="{! c.interfaz }"
+                    />
+                    </div> -->
+
+                </header>
+            </div>
+             <!-- <div class="slds-card__body slds-card__body_inner">
+            </div> -->
+            <footer class="slds-card__footer">
+                <aura:if isTrue="{! v.urlConstruida }">
+                <div aura:id="container">
+                <div class="slds-m-top_medium slds-m-bottom_x-large">
+                <div class="slds-p-around_medium">
+                <p><lightning:formattedUrl value="{! v.urlOncredit }" tooltip="{! v.tootip }" label="{! v.labelUX }" target="_blank" onclick="{! c.cerrarVenta }"/></p>
+                </div>
+                </div>
+                </div>
+                </aura:if>
+                <aura:if isTrue="{!! v.urlConstruida }">
+                <div class="slds-m-top_medium slds-m-bottom_x-large">
+                <div class="slds-p-around_medium">
+                <p>...</p>
+                </div>
+                </div>
+                </aura:if>
+            </footer>
+        </article>
+    </aura:if>
+   <!-- Componentes para ejecucion de accion global -->
+
+</aura:component>
