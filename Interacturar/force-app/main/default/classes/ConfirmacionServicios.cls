@@ -1,11 +1,10 @@
 global with sharing class ConfirmacionServicios {
+    
     global ConfirmacionServicios() {
-    }
-
-    	
+    }    	
     global static RespuestaConfirmacion       resConfirmacion;
     global static List<RespuestaConfirmacion> lstResConfirmacion;
-    
+     
     @InvocableMethod
     global static List<RespuestaConfirmacion> validaEjecucion(List<String> confirmacion ){
         resConfirmacion    = new RespuestaConfirmacion();
@@ -31,8 +30,7 @@ global with sharing class ConfirmacionServicios {
             lstResConfirmacion.add(resConfirmacion);
             return lstResConfirmacion;
         } 
-    }
-    
+    }    
     
     global static String validaEjecucionIdBPMS( String idObj ){
         // valida exista id procesoBMS
