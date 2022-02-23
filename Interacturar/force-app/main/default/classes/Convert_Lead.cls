@@ -28,7 +28,7 @@ public with sharing class Convert_Lead {
             lcr = Database.convertLead(leadConverted);
             return new List<String>{lcr.getAccountId()}; }else{ throw new claseException('El número de documento ya existe');
         }           
-    }
+    } 
 
     public static Boolean consultaDocumento(String identificacion){
         List<Account> lstCuenta = new List<Account>();
